@@ -1,0 +1,46 @@
+{
+  "amazon-uk" : {
+    "url": "https://www.amazon.co.uk/dp/",
+    "selectors": {
+      "name": {
+        "value": "productTitle",
+        "type": "id"
+      },
+      "price": {
+        "value" : ".a-price",
+        "type": "css"
+      },
+      "availability": {
+        "value": "availability",
+        "type": "id"
+      }
+      
+    }
+  },
+  "dunnes-grocery" : {
+    "url": "https://www.dunnesstoresgrocery.com/product/",
+    "selectors": {
+      "name": {
+        "value": "title",
+        "type": "tag"
+      },
+      "price": {
+        "value": ".pdpMainPrice-div-testId",
+        "type": "css"
+      }
+    }
+  },
+  "currys" : {
+    "url": "https://www.currys.ie/products/",
+    "selectors": {
+      "name": {
+        "value": "h1",
+        "type": "tag"
+      },
+      "price": {
+        "value": "//*[@id='js-product-detail']/div[1]/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/span/span/span",
+        "type": "xpath"
+      }
+    }
+  }
+}
