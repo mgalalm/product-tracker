@@ -13,16 +13,24 @@ with open("selectors.json", "r") as file:
 
 
 def get_driver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    chrome_options = webdriver.ChromeOptions()
+    print("Setting up chrome options")
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36")
     # Initialize the Chrome driver
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # service = Service("/usr/local/bin/chromedriver")
+    return webdriver.Chrome(options=chrome_options)
+    # return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 @app.route("/scrape/<site>/<pid>", methods=["GET"])
 def scrape(site, pid):
     try:
-      print("Scraping:", site)
+      print("Scraping  122 :", site)
       product_id = pid.strip()
       driver = get_driver()
       site_config = SELECTORS.get(site)
@@ -31,6 +39,11 @@ def scrape(site, pid):
               "error": "Site not found"
           })
       driver.get(site_config["url"] + product_id)
+      
+      # save the screenshot for debugging
+      driver.save_screenshot("screenshot.png")
+      
+      
       
       # dump the html to a file for debugging
       with open("page.html", "w") as file:
