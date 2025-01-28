@@ -1,5 +1,10 @@
 FROM python:3.11-slim
 
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+
 # Update system packages and install necessary dependencies, including chromium-driver
 RUN apt-get update && apt-get install -y \
     chromium-driver \
@@ -20,5 +25,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application's code into the container
 COPY . .
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"]
+CMD ["uvicorn", "retailer.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 # CMD ["python", "crawler.py"]

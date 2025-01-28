@@ -15,7 +15,8 @@
         "type": "id"
       }
       
-    }
+    },
+    "driver_mode": "remote"
   },
   "dunnes-grocery" : {
     "url": "https://www.dunnesstoresgrocery.com/product/",
@@ -28,7 +29,8 @@
         "value": ".pdpMainPrice-div-testId",
         "type": "css"
       }
-    }
+    },
+    "driver_mode": "local"
   },
   "currys" : {
     "url": "https://www.currys.ie/products/",
@@ -41,6 +43,7 @@
         "value": "//*[@id='js-product-detail']/div[1]/div/div[2]/div[1]/div[2]/div[1]/div/div/div/div/div/span/span/span",
         "type": "xpath"
       }
-    }
+    },
+    "driver_mode": "local"
   }
 }
