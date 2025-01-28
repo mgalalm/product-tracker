@@ -5,9 +5,11 @@ services:
       context: ./crawler
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "8000:8000"
     volumes:
       - ./crawler:/app
+    env_file:
+      - crawler/.env
     environment:
       - FLASK_APP=app/app.py
       - FLASK_ENV=development
