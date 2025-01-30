@@ -12,12 +12,6 @@ class RetailerConfig(BaseSettings):
             },
             "driver_mode": "remote"
         },
-        "ebay": {
-            "base_url": "https://www.ebay.com/itm",
-            "title_selector": "h1.it-ttl",
-            "price_selector": "span#prcIsum",
-            "availability_selector": "div#availability span"
-        },
         "currys": {
             "base_url": "https://www.currys.ie/products/",
             "selectors": {
@@ -26,6 +20,34 @@ class RetailerConfig(BaseSettings):
                 "availability": "div.out-of-stock-text div"
             },
             "driver_mode": "local"
+        },
+        "timberland": {
+            "base_url": "https://www.timberland.ie/en-ie/p/",
+            "sku_example": "timberland-premium-6-inch-waterproof-boot-for-men-in-yellow-TB110061713",
+            "selectors": {
+                "name": "h1",
+                "price": "div[data-dynatrace='product-price'] span",
+                "availability": "span.availability"
+            },
+            "driver_mode": "remote"
+        },
+        "tesco" : {
+            "base_url": "https://www.tesco.ie/groceries/en-IE/products/",
+            "selectors": {
+                "name": "h1",
+                "price": "span.price-per-sellable-unit",
+                "availability": "div.product-details-tile__availability"
+            },
+            "driver_mode": "local"
+        },
+        "dunnes": {
+            "base_url": "https://www.dunnesstoresgrocery.com/product/", # dunnes/100274908
+            "selectors": {
+                "name": "h2",
+                "price": "span[data-testid='pdpMainPrice-div-testId']",
+                "availability": "span.availability"
+            },
+            "driver_mode": "remote"
         }
     }
     
