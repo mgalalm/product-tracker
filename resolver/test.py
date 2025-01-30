@@ -16,8 +16,8 @@ def expand_amazon_url(short_url):
     """
     try:
         # Verify it's an Amazon short URL
-        if not short_url.startswith(('http://amzn.', 'https://amzn.')):
-            raise ValueError("Not a valid Amazon short URL")
+        # if not short_url.startswith(('http://amzn.', 'https://amzn.')):
+        #     raise ValueError("Not a valid Amazon short URL")
             
         # Make a GET request to the short URL
         # Don't follow redirects (allow_redirects=False) to get the redirect URL
@@ -34,7 +34,7 @@ def expand_amazon_url(short_url):
 
 # Example usage
 if __name__ == "__main__":
-    short_url = "https://amzn.eu/d/hzcPXEj"
+    short_url = "https://tinyurl.com/2fcpre6"
     try:
         full_url = expand_amazon_url(short_url)
         print(f"Full URL: {full_url}")

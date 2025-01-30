@@ -7,7 +7,11 @@ class ParserService:
   def __init__(self,  driver, selectors):
     self.selectors = selectors
     self.driver = driver
+    # page = self.driver.get(self.driver.url)
     page = self.driver.get_content()
+    # save the page source to a file for debugging
+    with open('page.html', 'w') as file:
+      file.write(page)
     self.soup = BeautifulSoup(page, 'html.parser')
 
   def parse(self):
