@@ -12,7 +12,7 @@ class AmazonUK implements Client
 
         $results = Http::get($this->endpoint($stock))->json();
 
-        $available = $results['available'] === 'In stock' ? true : false;
+        $available = $results['availability'] === 'In stock' ? true : false;
         $price  = Money::parse($results['price']);
 
         return new StockStatus(
@@ -25,6 +25,13 @@ class AmazonUK implements Client
     {
         // use base url from Client interface
         return $this::BASE_URL . "/amazon-uk/{$stock->sku}";
+    }
+
+    public function getProductURLPatterns(): array
+    {
+        return [
+            '/(?:dp|gp\/product)\/([A-Z0-9]+)/'
+        ];
     }
 
 }

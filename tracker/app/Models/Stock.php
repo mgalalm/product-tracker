@@ -16,12 +16,6 @@ class Stock extends Model
     use HasFactory;
     protected $guarded = [];
 
-    // product relationship
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
     // retailer relationship
     public function retailer()
     {
@@ -40,6 +34,12 @@ class Stock extends Model
         }
         // dispatch job
         TrackProduct::dispatch($this)->delay(now()->addMinutes(4));
+    }
+
+    // products relationship
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
     }
 
     // protected function price(): Attribute {

@@ -22,6 +22,7 @@
                                 >
                                 <div class="mt-2">
                                     <TextInput v-model="productForm.name" placeholder="Name of the product here"/>
+                                    <InputError :message="productForm.errors.name" />
                                 </div>
                             </div>
                         </div>
@@ -42,6 +43,8 @@
                                 v-model:input="productForm.stockUrl"
                                 :options="options"
                                 ></GroupInput>
+                                <InputError :message="productForm.errors.retailer" />
+                                <InputError :message="productForm.errors.stockUrl" />
 
                             </div>
                         </div>
@@ -51,7 +54,7 @@
                     <CancelButton>
                         Cancel
                     </CancelButton>
-                    <PrimaryButton type="submit">
+                    <PrimaryButton type="submit" :disabled="productForm.processing">
                         Save
                     </PrimaryButton>
                 </div>
@@ -69,6 +72,7 @@ import TextInput from "@/Components/TextInput.vue";
 import GroupInput from "@/Components/GroupInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CancelButton from "@/Components/CancelButton.vue";
+import InputError from "@/Components/InputError.vue";
 
 const productForm = useForm({
     name: "",
@@ -79,7 +83,18 @@ const productForm = useForm({
 
 const addProduct = () => {
     // console.log(productForm);
-    productForm.post(route("products.store"));
+
+    productForm.post(route("products.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+
+        },
+        onError: () => {
+            // console.log(result);
+        },
+    });
+
+
 };
 
 

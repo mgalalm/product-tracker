@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\ProductUrlValidation;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
@@ -37,28 +38,32 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        // validate the request
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'stockUrl' => ['required', 'url'],
+            'name'  => ['required', 'string', 'max:255'],
             'retailer' => ['required', 'exists:retailers,id'],
+            'stockUrl' => ['required', 'url', new ProductUrlValidation],
         ]);
 
-        // dd($data);
+        // get sku from session
+        $sku = session()->get('sku');
 
-        $product = Product::make($data)
-            ->user()->associate($request->user())
-            // ->retailer()->associate($data['retailerId'])
-            ->save();
+        // create product
+        $product = $request->user()->products()->create([
+            'name' => $data['name'],
+        ]);
 
-        //save stock
-        // $product->stocks()->create([
-        //     'price' => 0,
-        //     'url' => $data['stockUrl'],
-        //     'in_stock' => false,
-        //     'retailer_id' => $data['retailer'],
-        // ]);
-
+        // create stock
+        $product->stocks()->firstOrCreate([
+            'sku' => $sku,
+            'retailer_id' => $data['retailer'],
+        ] ,[
+            'price' => 0,
+            'url' => $data['stockUrl'],
+            'in_stock' => false,
+            'retailer_id' => $data['retailer'],
+            'sku' => $sku,
+        ]);
 
         return to_route('products.index');
     }

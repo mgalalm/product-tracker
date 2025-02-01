@@ -15,7 +15,10 @@ it("tracks products stock", function () {
 
     mockClientRequest(available: true, price: '£20.0');
 
+
     $this->artisan('track');
+
+
 
     $this->assertTrue(Product::first()->inStock());
 });

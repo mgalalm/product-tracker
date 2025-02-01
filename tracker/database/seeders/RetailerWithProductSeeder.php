@@ -20,14 +20,12 @@ class RetailerWithProductSeeder extends Seeder
 
         $stock = new Stock([
             'price' => 2000,
-            'url' => 'http://www.amazon.uk',
+            'url' => 'http://www.amazon.uk/dp/12345678',
             'in_stock' => false,
             'sku' => '12345',
         ]);
 
         $amazon_uk->addStock($my_book, $stock);
-
-
 
     }
 }

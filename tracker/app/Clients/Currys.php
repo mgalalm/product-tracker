@@ -14,7 +14,7 @@ class Currys implements Client
 
         $price = Money::parse($results['price']);
         return new StockStatus(
-            $results['available'],
+            $results['availability'],
             $price
         );
     }
@@ -22,5 +22,12 @@ class Currys implements Client
     public function endpoint(Stock $stock): string
     {
         return $this::BASE_URL . "/currys/{$stock->sku}.html";
+    }
+
+    public function getProductURLPatterns(): array
+    {
+        return [
+            '/(?:products)\/.*-(\d+)(?=\.html)/'
+        ];
     }
 }

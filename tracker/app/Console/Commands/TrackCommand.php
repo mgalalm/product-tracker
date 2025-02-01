@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Console\Command;
 
 class TrackCommand extends Command
@@ -42,8 +43,10 @@ class TrackCommand extends Command
 
     private function showResults()
     {
-        $data = Product::leftJoin('stocks', 'stocks.product_id', '=', 'products.id')
-            ->get(['products.name', 'stocks.price', 'stocks.url', 'stocks.in_stock']);
+        $data = Stock::leftJoin('product_stock', 'product_stock.stock_id', '=', 'stocks.id')
+            ->leftJoin('products', 'product_stock.product_id', '=', 'products.id')
+            ->get(['products.name', 'stocks.price', 'stocks.url', 'stocks.in_stock'])
+            ->toArray();
 
         $this->table(['Name', 'Price', 'URL', 'In Stock'], $data);
     }

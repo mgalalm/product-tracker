@@ -35,8 +35,9 @@ class ImportantStockUpdate extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        // TODO personalize the email to the product of the user
         return (new MailMessage)
-            ->subject('Important Stock Update for ' . $this->stock->product->name)
+            ->subject('Important Stock Update for ' . $this->stock->products->first()->name)
             ->line('The product you have been tracking is now in stock!')
                     ->action('Buy It Now', url($this->stock->url))
                     ->line('Thank you for using our application!');

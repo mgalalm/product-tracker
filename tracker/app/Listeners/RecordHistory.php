@@ -24,11 +24,20 @@ class RecordHistory
     public function handle(ProductTracked $event): void
     {
         $stock = $event->stock;
-        History::create([
-            'price' => $stock->price,
-            'in_stock' => $stock->in_stock,
-            'product_id' => $stock->product_id,
-            'stock_id' => $stock->id,
-        ]);
+        // for every products, create a history
+        $stock->products()->each(function ($product) use ($stock) {
+            History::create([
+                'price' => $stock->price,
+                'in_stock' => $stock->in_stock,
+                'product_id' => $product->id,
+                'stock_id' => $stock->id,
+            ]);
+        });
+        // History::create([
+        //     'price' => $stock->price,
+        //     'in_stock' => $stock->in_stock,
+        //     'product_id' => $stock->product_id,
+        //     'stock_id' => $stock->id,
+        // ]);
     }
 }
