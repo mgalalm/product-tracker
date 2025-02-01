@@ -23,7 +23,7 @@ class Product extends Model
     // stock relationship
     public function stocks()
     {
-        return $this->hasMany(Stock::class);
+        return $this->belongsToMany(Stock::class);
     }
 
     public function track()

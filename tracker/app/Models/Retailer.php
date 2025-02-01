@@ -13,8 +13,24 @@ class Retailer extends Model
 
     public function addStock(Product $product, Stock $stock)
     {
-        $stock->product_id = $product->id;
-        $this->stock()->save($stock);
+
+        $stock = $this->stock()->create($stock->toArray());
+        $product->stocks()->attach($stock->id);
+    //    $this->stock()->save($stock);
+    //    dd($product->stocks()->get());
+
+    //    dd($product->w
+        // $product->retailer_id = $this->id;
+        // $product->save();
+        // $stock->product_id = $product->id;
+        // $stock->save();
+        // $product->stocks()->save($stock);
+        // $product->stocks()->attach($stock)->save();
+    //    $product->save();
+        // $stock->products()->attach($product)->save();
+
+        // $stock->product_id = $product->id;
+        // $this->stock()->save($stock);
     }
 
     public function stock()

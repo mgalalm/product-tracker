@@ -41,7 +41,5 @@ class TrackProduct implements ShouldQueue
         // dispatch event
         ProductTracked::dispatch($this->stock);
 
-
-
     }
 }
