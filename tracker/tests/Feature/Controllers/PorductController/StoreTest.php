@@ -4,9 +4,11 @@ use App\Models\Retailer;
 use App\Models\User;
 use App\Models\Product;
 use function Pest\Laravel\actingAs;
+use Illuminate\Support\Facades\Notification;
 
 
 it('can store a product', function () {
+    Notification::fake();
     $user = User::factory()->create();
     mockClientRequest(pattern: '/(?:products)\/.*-(\d+)(?=\.html)/');
 
@@ -26,6 +28,9 @@ it('can store a product', function () {
     $this->assertDatabaseHas(Product::class, [
         'name' => 'This is a product',
     ]);
+
+    // no notification should be sent as the stock is added for the first time
+    Notification::assertNothingSent();
 
 });
 
@@ -47,7 +52,6 @@ it('redirects to the product page after storing', function () {
     ])->assertRedirect(route('products.index'));
 
 });
-
 
 it('require a valid product name', function ($value) {
     $user = User::factory()->create();

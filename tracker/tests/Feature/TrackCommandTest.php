@@ -51,3 +51,22 @@ it('doesn\'t notify the user when the stock remains unavailable', function () {
 
 });
 
+// it shouldn't notify the user when the stock not tracked before
+
+it('doesn\'t notify the user when the stock not tracked before', function () {
+
+    Notification::fake();
+
+    $this->seed(RetailerWithProductSeeder::class);
+
+    $product = Product::first();
+
+    $product->stocks->first()->update(['tracked' => false]);
+
+    mockClientRequest(available: true, price: '£20.0');
+
+    $this->artisan('track');
+
+    Notification::assertNothingSent();
+
+});

@@ -7,8 +7,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Testing\AssertableInertia;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Clients\Client;
-use App\Models\Stock;
+
 
 function mockClientRequest($available = true, $price = '1000', $pattern = '/(.*)/')
 {
@@ -21,35 +20,6 @@ function mockClientRequest($available = true, $price = '1000', $pattern = '/(.*)
         ]);
     ClientFactory::shouldReceive('make->endpoint')
         ->andReturn('http://example.com');
-
-}
-
-function mockClient($pattern)
-{
-    ClientFactory::shouldReceive('make')->andReturn(new class implements Client {
-        public function checkAvailability(Stock $stock): StockStatus
-        {
-            return new StockStatus(
-                true,
-                Money::GBP(1000)
-            );
-        }
-
-        public function getProductURLPatterns(): array
-        {
-            return [
-                'test'
-            ];
-        }
-
-        // implement the endpoint method
-        public function endpoint(Stock $stock): string
-        {
-            return 'http://example.com';
-
-        }
-
-    });
 
 }
 

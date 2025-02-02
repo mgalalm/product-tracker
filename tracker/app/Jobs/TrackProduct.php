@@ -27,7 +27,7 @@ class TrackProduct implements ShouldQueue
         $status = $this->stock->retailer->client()
             ->checkAvailability($this->stock);
 
-        if (!$this->stock->in_stock && $status->available) {
+        if ($this->stock->tracked && !$this->stock->in_stock && $status->available) {
             // notify user
             NowInStock::dispatch($this->stock);
         }
@@ -36,6 +36,7 @@ class TrackProduct implements ShouldQueue
             'in_stock' => $status->available,
             'price' => $status->price->getAmount(),
             'currency' => $status->price->getCurrency(),
+            'tracked' => true,
         ]);
 
         // dispatch event

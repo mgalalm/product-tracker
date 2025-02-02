@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-           // $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Retailer::class)->constrained()->cascadeOnDelete();
             $table->unsignedInteger('price');
             $table->string('currency')->default('EUR');
             $table->string('sku')->nullable();
             $table->boolean('in_stock')->default(false);
             $table->string('url');
+            $table->boolean('tracked')->default(false );
             $table->timestamps();
+            $table->index(['sku', 'retailer_id']);
         });
     }
 
