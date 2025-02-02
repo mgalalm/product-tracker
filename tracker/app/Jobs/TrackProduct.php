@@ -5,7 +5,7 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Stock;
-use App\Events\{NowInStock,ProductTracked};
+use App\Events\{NowInStock,ProductTracked, PriceDropped};
 
 class TrackProduct implements ShouldQueue
 {
@@ -27,9 +27,17 @@ class TrackProduct implements ShouldQueue
         $status = $this->stock->retailer->client()
             ->checkAvailability($this->stock);
 
-        if ($this->stock->tracked && !$this->stock->in_stock && $status->available) {
+
+        // product was not in stock and now is in
+        if ($this->stock->nowInStock($status)) {
             // notify user
             NowInStock::dispatch($this->stock);
+        }
+
+        // if the price of the stock price drops trigger PriceDropped event
+        if ($this->stock->priceDropped($status)) {
+            // notify user
+            PriceDropped::dispatch($this->stock);
         }
 
         $this->stock->update([

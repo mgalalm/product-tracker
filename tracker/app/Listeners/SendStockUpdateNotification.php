@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\NowInStock;
+use App\Events\PriceDropped;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
@@ -21,7 +22,7 @@ class SendStockUpdateNotification
     /**
      * Handle the event.
      */
-    public function handle(NowInStock $event): void
+    public function handle(NowInStock|PriceDropped $event): void
     {
         User::first()->notify(new ImportantStockUpdate($event->stock));
     }
