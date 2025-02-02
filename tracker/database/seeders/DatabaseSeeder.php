@@ -43,23 +43,5 @@ class DatabaseSeeder extends Seeder
             'in_stock' => false,
             'sku' => '10248709',
         ]);
-
-        // Stock::factory()->create([
-        //     // 'product_id' => Product::factory()->create(['name' => 'Neoteck Non-Contact AC Voltage Tester Pen', 'user_id' => $admin->id]),
-        //     'retailer_id' => Retailer::factory()->create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']),
-        //     'price' => 2000,
-        //     'url' => 'https://www.amazon.co.uk',
-        //     'in_stock' => false,
-        //     'sku' => 'B01JYCVU2Q',
-        // ])
-
-        // Stock::factory()->create([
-        //     // 'product_id' => Product::factory()->create(['name' => 'LOGIK LSD55W23 50/50 Fridge Freezer - White', 'user_id' => $admin->id]),
-        //     'retailer_id' => Retailer::factory()->create(['name' => 'Currys', 'domain' => 'currys.ie']),
-        //     'price' => 349,
-        //     'url' => 'https://www.currys.ie/products/logik-lsd55w23-5050-fridge-freezer-white-10248709.html',
-        //     'in_stock' => false,
-        //     'sku' => '10248709',
-        // ]);
     }
 }
