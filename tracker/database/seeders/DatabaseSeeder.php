@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         ])->stocks()->create([
             'retailer_id' => Retailer::factory()->create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk'])->id,
             'price' => 2000,
-            'url' => 'https://www.amazon.co.uk',
+            'url' => 'https://www.amazon.co.uk/Neoteck-Non-Contact-12-1000V-Detector-Flashlight/dp/B01JYCVU2Q',
             'in_stock' => false,
             'sku' => 'B01JYCVU2Q',
         ]);

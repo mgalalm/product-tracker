@@ -5,6 +5,7 @@ use Database\Seeders\RetailerWithProductSeeder;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
+use App\Events\PriceDropped;
 
 it("tracks products stock", function () {
     $this->seed(RetailerWithProductSeeder::class);
@@ -68,5 +69,25 @@ it('doesn\'t notify the user when the stock not tracked before', function () {
     $this->artisan('track');
 
     Notification::assertNothingSent();
+
+});
+
+
+it('notify the user when the price drops', function () {
+
+    Event::fake();
+
+    $this->seed(RetailerWithProductSeeder::class);
+
+    $product = Product::first();
+
+    // form  200 to 20
+    $product->stocks->first()->update(['price' => 20000, 'in_stock' => true]);
+
+    mockClientRequest(available: true, price: '£20.0');
+
+    $this->artisan('track');
+
+   Event::assertDispatched(PriceDropped::class);
 
 });

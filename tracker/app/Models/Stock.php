@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Clients\StockStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Jobs\TrackProduct;
+
 
 class Stock extends Model
 {
@@ -35,6 +37,17 @@ class Stock extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class);
+    }
+
+
+    public function nowInStock(StockStatus $status): bool
+    {
+        return $this->tracked && !$this->in_stock && $status->available;
+    }
+
+    public function priceDropped(StockStatus $status): bool
+    {
+        return $this->tracked && $this->in_stock && $status->available && $this->price > $status->price->getAmount();
     }
 
 }
