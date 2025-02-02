@@ -7,7 +7,7 @@ use App\Models\Stock;
 interface Client
 {
     // define a constant for crawler base url
-    public const BASE_URL = 'http://127.0.0.1:8000';
+    public const BASE_URL = 'http://127.0.0.1:8001';
 
     public function checkAvailability(Stock $stock): StockStatus;
 
