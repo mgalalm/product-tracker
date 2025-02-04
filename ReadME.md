@@ -1,8 +1,26 @@
 ## Getting Started
+Inside the tracker folder
 
 ```bash
-php artisan queue:work
+  composer install 
 ```
+In the .env file 
+```
+QUEUE_CONNECTION=redis
+
+REDIS_CLIENT=predis
+
+REDIS_HOST=localhost
+
+REDIS_PASSWORD=null
+
+REDIS_PORT=6379
+```
+
+```bash
+php artisan horizon
+```
+
 
 ```bash
 php artisan track
