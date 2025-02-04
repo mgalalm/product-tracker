@@ -23,7 +23,7 @@ class StockResource extends JsonResource
             'in_stock' => $this->in_stock,
             'price' => $this->price,
             'currency' => $this->currency,
-            'formatted_price' => Money::parseByDecimal($this->price, $this->currency)->format(),
+            'formatted_price' => $this->formatted_price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

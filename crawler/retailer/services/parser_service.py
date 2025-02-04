@@ -22,5 +22,5 @@ class ParserService:
 
 
   def get_attribute_value(self, selector):
-    element = self.soup.select_one(selector)
-    return element.text.strip() if element else "N/A"
+    element = self.soup.select_one(selector)    
+    return element.text.strip().rstrip('.') if element else "N/A"

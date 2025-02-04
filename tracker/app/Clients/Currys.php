@@ -5,6 +5,7 @@ namespace App\Clients;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Http;
 use Cknow\Money\Money;
+use Illuminate\Support\Str;
 
 class Currys implements Client
 {
@@ -13,8 +14,10 @@ class Currys implements Client
         $results =  Http::get($this->endpoint($stock))->json();
 
         $price = Money::parse($results['price']);
+        $in_stock = Str::lower($results['availability']) !== Str::lower('out of stock');
+
         return new StockStatus(
-            $results['availability'],
+            $in_stock,
             $price
         );
     }
