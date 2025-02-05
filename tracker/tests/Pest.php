@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Sleep;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,9 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 pest()->extend(Tests\TestCase::class)
     ->use(LazilyRefreshDatabase::class)
+    ->beforeEach(function () {
+        Sleep::fake();
+    })
     ->in('Feature');
 
 
@@ -24,7 +28,14 @@ pest()->extend(Tests\TestCase::class)
 pest()->extend(Tests\TestCase::class)
     ->use(LazilyRefreshDatabase::class)
     ->in(targets: 'Integration')
+    ->beforeEach(function () {
+         Sleep::fake();
+    })
     ->group('integration');
+
+pest()
+    ->in('Feature/Jetstream')
+    ->group('jetstream');
 
 
 /*

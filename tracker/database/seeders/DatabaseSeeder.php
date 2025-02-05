@@ -43,5 +43,19 @@ class DatabaseSeeder extends Seeder
             'in_stock' => false,
             'sku' => '10248709',
         ]);
+
+        Product::factory()->create(
+            [
+                'name' => "L'OR Classique Instant Coffee 150g",
+                'user_id' => $admin->id,
+            ]
+        )->stocks()->create([
+            'retailer_id' => Retailer::factory()->create(['name' => 'Dunnes', 'domain' => 'dunnesstoresgrocery.com'])->id,
+            'price' => 12.70,
+            'currency' => 'EUR',
+            'url' => "https://www.dunnesstoresgrocery.com/sm/delivery/rsid/428/product/l'or-classique-instant-coffee-150g-id-100274908",
+            'in_stock' => false,
+            'sku' => '100274908',
+        ]);
     }
 }

@@ -53,10 +53,10 @@ class TrackProduct implements ShouldQueue
 
     }
 
-    public function middleware(): array
-    {
-        return [new RateLimited];
-    }
+    // public function middleware(): array
+    // {
+    //     return [new RateLimited];
+    // }
 
 
 }

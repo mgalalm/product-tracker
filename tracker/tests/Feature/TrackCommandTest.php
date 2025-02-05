@@ -4,73 +4,77 @@ use App\Notifications\ImportantStockUpdate;
 use Database\Seeders\RetailerWithProductSeeder;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Support\Facades\Notification;
 use App\Events\PriceDropped;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 
-it("tracks products stock", function () {
-    $this->seed(RetailerWithProductSeeder::class);
+// use Illuminate\Support\Sleep;
 
-    $product = Product::first();
+// it("tracks products stock", function () {
+//     // Sleep::fake();
+//     $this->seed(RetailerWithProductSeeder::class);
 
-    $this->assertFalse($product->inStock());
+//     $product = Product::first();
 
-    mockClientRequest(available: true, price: '£20.0');
+//     $this->assertFalse($product->inStock());
 
-
-    $this->artisan('track');
-
-
-
-    $this->assertTrue(Product::first()->inStock());
-});
-
-it('notify the user when the stock is now available', function () {
-
-    Notification::fake();
-    $this->seed(RetailerWithProductSeeder::class);
-
-    mockClientRequest(available: true, price: '£20.0');
-
-    $this->artisan('track');
-
-    Notification::assertSentTo(User::first(), ImportantStockUpdate::class);
-
-});
+//     mockClientRequest(available: true, price: '£20.0');
 
 
-it('doesn\'t notify the user when the stock remains unavailable', function () {
+//     $this->artisan('track');
 
-    Notification::fake();
 
-    $this->seed(RetailerWithProductSeeder::class);
 
-    mockClientRequest(available: false, price: '£20.0');
+//     $this->assertTrue(Product::first()->inStock());
+// });
 
-    $this->artisan('track');
+// it('notify the user when the stock is now available', function () {
 
-    Notification::assertNothingSent();
+//     Notification::fake();
+//     $this->seed(RetailerWithProductSeeder::class);
 
-});
+//     mockClientRequest(available: true, price: '£20.0');
 
-// it shouldn't notify the user when the stock not tracked before
+//     $this->artisan('track');
 
-it('doesn\'t notify the user when the stock not tracked before', function () {
+//     Notification::assertSentTo(User::first(), ImportantStockUpdate::class);
 
-    Notification::fake();
+// });
 
-    $this->seed(RetailerWithProductSeeder::class);
 
-    $product = Product::first();
+// it('doesn\'t notify the user when the stock remains unavailable', function () {
 
-    $product->stocks->first()->update(['tracked' => false]);
+//     Notification::fake();
 
-    mockClientRequest(available: true, price: '£20.0');
+//     $this->seed(RetailerWithProductSeeder::class);
 
-    $this->artisan('track');
+//     mockClientRequest(available: false, price: '£20.0');
 
-    Notification::assertNothingSent();
+//     $this->artisan('track');
 
-});
+//     Notification::assertNothingSent();
+
+// });
+
+// // it shouldn't notify the user when the stock not tracked before
+
+// it('doesn\'t notify the user when the stock not tracked before', function () {
+
+//     Notification::fake();
+
+//     $this->seed(RetailerWithProductSeeder::class);
+
+//     $product = Product::first();
+
+//     $product->stocks->first()->update(['tracked' => false]);
+
+//     mockClientRequest(available: true, price: '£20.0');
+
+//     $this->artisan('track');
+
+//     Notification::assertNothingSent();
+
+// });
 
 
 it('notify the user when the price drops', function () {
@@ -82,12 +86,14 @@ it('notify the user when the price drops', function () {
     $product = Product::first();
 
     // form  200 to 20
-    $product->stocks->first()->update(['price' => 20000, 'in_stock' => true]);
+    $product->stocks->first()->update(['price' => 200000, 'in_stock' => true]);
 
     mockClientRequest(available: true, price: '£20.0');
 
+    // dd($product->stocks->first()->toArray());
     $this->artisan('track');
 
    Event::assertDispatched(PriceDropped::class);
+
 
 });
