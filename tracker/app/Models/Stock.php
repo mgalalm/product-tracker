@@ -36,6 +36,7 @@ class Stock extends Model
         // sleep for random between 4 to 5 minutes
         Sleep::for(rand(3, 5))->minutes();
         TrackProduct::dispatch($this)->delay(now()->addMinutes(1));
+        // TrackProduct::dispatch($this);
     }
 
     // products relationship
