@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Clients\StockStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Jobs\TrackProduct;
@@ -34,9 +33,9 @@ class Stock extends Model
         }
         // dispatch job
         // sleep for random between 4 to 5 minutes
-        Sleep::for(rand(3, 5))->minutes();
+        Sleep::for(rand(1, 3))->minutes();
         TrackProduct::dispatch($this)->delay(now()->addMinutes(1));
-        // TrackProduct::dispatch($this);
+
     }
 
     // products relationship
