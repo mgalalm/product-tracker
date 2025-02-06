@@ -24,6 +24,11 @@ class SendStockUpdateNotification
      */
     public function handle(NowInStock|PriceDropped $event): void
     {
-        User::first()->notify(new ImportantStockUpdate($event->stock));
+        if ($event instanceof NowInStock) {
+            $type = 'in_stock';
+        } else {
+            $type = 'price_dropped';
+        }
+        User::first()->notify(new ImportantStockUpdate($event->newStock, $event->oldStock, $type));
     }
 }

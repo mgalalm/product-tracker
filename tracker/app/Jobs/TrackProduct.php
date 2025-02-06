@@ -25,21 +25,14 @@ class TrackProduct implements ShouldQueue
      */
     public function handle(): void
     {
+
         $status = $this->stock->retailer->client()
             ->checkAvailability($this->stock);
 
+        $original = $this->stock->replicate();
 
         // product was not in stock and now is in
-        if ($this->stock->nowInStock($status)) {
-            // notify user
-            NowInStock::dispatch($this->stock);
-        }
 
-        // if the price of the stock price drops trigger PriceDropped event
-        if ($this->stock->priceDropped($status)) {
-            // notify user
-            PriceDropped::dispatch($this->stock);
-        }
 
         $this->stock->update([
             'in_stock' => $status->available,
@@ -48,15 +41,21 @@ class TrackProduct implements ShouldQueue
             'tracked' => true,
         ]);
 
+
+        if ($original->nowInStock($status)) {
+            // notify user
+            NowInStock::dispatch($this->stock, $original);
+        }
+
+        // if the price of the stock price drops trigger PriceDropped event
+        if ($original->priceDropped($status)) {
+            // notify user
+            PriceDropped::dispatch($this->stock, $original);
+        }
+
         // dispatch event
         ProductTracked::dispatch($this->stock);
 
     }
-
-    // public function middleware(): array
-    // {
-    //     return [new RateLimited];
-    // }
-
 
 }
