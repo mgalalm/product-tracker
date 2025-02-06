@@ -33,9 +33,8 @@ class Stock extends Model
         }
         // dispatch job
         // sleep for random between 4 to 5 minutes
-        Sleep::for(rand(1, 3))->minutes();
+        Sleep::for(rand(1, 2))->minutes();
         TrackProduct::dispatch($this)->delay(now()->addMinutes(1));
-
     }
 
     // products relationship
@@ -43,7 +42,6 @@ class Stock extends Model
     {
         return $this->belongsToMany(Product::class);
     }
-
 
     public function nowInStock(StockStatus $status): bool
     {
@@ -58,10 +56,11 @@ class Stock extends Model
     public function getFormattedPriceAttribute()
     {
         return Money::parse($this->price, $this->currency)->format();
-        // return Attribute::make(
-        //     get: fn (mixed $value, array $attributes) => new Money(
-        //         $attributes['price'], $attributes['currency'])
-        // );
     }
+
+    // public function getNameAttribute()
+    // {
+    //     return $this->products->first()->name;
+    // }
 
 }

@@ -18,7 +18,7 @@ class PriceDropped
     /**
      * Create a new event instance.
      */
-    public function __construct(public Stock $stock)
+    public function __construct(public Stock $newStock, public Stock $oldStock)
     {
         //
     }

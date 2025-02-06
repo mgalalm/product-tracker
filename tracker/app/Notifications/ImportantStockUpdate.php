@@ -15,7 +15,7 @@ class ImportantStockUpdate extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected Stock $stock)
+    public function __construct(protected Stock $stock, public Stock $oldStock, public string $type)
     {
         //
     }
@@ -38,7 +38,15 @@ class ImportantStockUpdate extends Notification
         // TODO personalize the email to the product of the user
         return (new MailMessage)
             ->subject('Important Stock Update for ' . $this->stock->products->first()->name)
-            ->line('The product you have been tracking is now in stock!')
+            ->lineIf($this->type == 'in_stock', 'The product you have been tracking is now in stock!')
+            ->lineIf($this->type == 'price_dropped', 'The product you have been tracking has a price drop!')
+            // add the stock details as list
+            ->line('The stock details are:')
+            ->line('Name: ' . $this->stock->products->first()->name)
+            // if the type is price_dropped, show  both the old and new price
+            ->lineIf($this->type == 'price_dropped', 'Old Price: ' . $this->oldStock->formatted_price)
+            ->line('Price: ' . $this->stock->formatted_price)
+            ->line('In Stock: ' . ($this->stock->in_stock ? 'Yes' : 'No'))
                     ->action('Buy It Now', url($this->stock->url))
                     ->line('Thank you for using our application!');
     }
