@@ -14,8 +14,6 @@ it('can show a product', function () {
 
 
 it('passes the product to the view', function () {
-
-
     $this->seed(RetailerWithProductSeeder::class);
     $product = Product::first();
 
