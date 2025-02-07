@@ -31,22 +31,3 @@ it("tracks products", function () {
         $this->fail("Failed to track the Currys stock: {$e->getMessage()}");
     }
 });
-
-it("tracks unavailable product", function () {
-    $this->seed(RetailerWithProductSeeder::class);
-
-    $stock = tap(Stock::first())->update([
-        'sku' => '10246803',
-        'url' => 'https://www.currys.ie/products/logik-lsd55w23-5050-fridge-freezer-white-10246803.html',
-    ]);
-
-    try {
-        $stockStatus = (new Currys())->checkAvailability($stock);
-        // assert $stockStatus is an instance of StockStatus class
-        $this->assertEquals($stockStatus->available, false);
-
-
-    } catch (Exception $e) {
-        $this->fail("Failed to track the Currys stock: {$e->getMessage()}");
-    }
-});

@@ -9,8 +9,8 @@ it("tracks products", function() {
     $this->seed(RetailerWithProductSeeder::class);
 
     $stock = tap(Stock::first())->update([
-       'sku' => 'B01JYCVU2Q',
-       'url' => 'https://www.amazon.co.uk/gp/product/B01JYCVU2Q',
+       'sku' => '1501124064',
+       'url' => 'https://www.amazon.co.uk/gp/product/1501124064',
     ]);
 
     try {

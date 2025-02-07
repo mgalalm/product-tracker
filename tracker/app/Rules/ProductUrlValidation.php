@@ -20,6 +20,12 @@ class ProductUrlValidation implements ValidationRule, DataAwareRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        // fail if retailer is not set
+        // if (!isset($this->data['retailer'])) {
+        //     $fail("The {$attribute} must be a valid URL for this retailer.");
+        //     return;
+        // }
+
         $retailer = Retailer::findOrFail($this->data['retailer']); // Get selected retailer
         // fail if doesn't match retailer domain with www or without www
         if (!preg_match("/https?:\/\/(www\.)?{$retailer->domain}\//", $value)) {

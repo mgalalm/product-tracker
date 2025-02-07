@@ -7,10 +7,10 @@
                         <h2 class="text-base/7 font-semibold text-gray-900">
                             Product
                         </h2>
-                        <p class="mt-1 text-sm/6 text-gray-600">
+                        <!-- <p class="mt-1 text-sm/6 text-gray-600">
                             This information will be displayed publicly so be
                             careful what you share.
-                        </p>
+                        </p> -->
                         <div
                             class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
                         >
@@ -21,8 +21,8 @@
                                     >Name</label
                                 >
                                 <div class="mt-2">
-                                    <TextInput v-model="productForm.name" placeholder="Name of the product here"/>
-                                    <InputError :message="productForm.errors.name" />
+                                    <TextInput v-model="productForm.name" placeholder="Name of your product here"/>
+                                    <InputError :message="productForm.errors.name" class="mt-1"/>
                                 </div>
                             </div>
                         </div>
@@ -43,8 +43,8 @@
                                 v-model:input="productForm.stockUrl"
                                 :options="options"
                                 ></GroupInput>
-                                <InputError :message="productForm.errors.retailer" />
-                                <InputError :message="productForm.errors.stockUrl" />
+                                <InputError :message="productForm.errors.retailer" class="mt-1"/>
+                                <InputError :message="productForm.errors.stockUrl" class="mt-1"/>
 
                             </div>
                         </div>
