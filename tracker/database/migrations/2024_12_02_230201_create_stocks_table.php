@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('currency')->default('EUR');
             $table->string('sku')->nullable();
             $table->boolean('in_stock')->default(false);
-            $table->string('url');
+            $table->string('url', 2048);
             $table->boolean('tracked')->default(false );
             $table->timestamps();
             $table->index(['sku', 'retailer_id']);

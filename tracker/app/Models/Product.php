@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Cknow\Money\Money;
 
 class Product extends Model
 {
@@ -41,5 +42,34 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function getPriceRangeAttribute()
+    {
+        if (!$this->relationLoaded('stocks')) {
+            $this->load('stocks');
+        }
+
+        $stocks = $this->stocks;
+
+        if ($stocks->isEmpty()) {
+            return null;
+        }
+
+        $minPrice = $stocks->min('price');
+        $maxPrice = $stocks->max('price');
+
+        // Get currency from first stock
+        $currency = $stocks->first()->currency;
+
+        // Convert to Money objects using the currency from first stock
+        $minMoney = Money::$currency($minPrice);
+        $maxMoney = Money::$currency($maxPrice);
+
+        if ($minPrice === $maxPrice) {
+            return $minMoney->format();
+        }
+
+        return $minMoney->format() . ' - ' . $maxMoney->format();
+    }
+
 
 }
