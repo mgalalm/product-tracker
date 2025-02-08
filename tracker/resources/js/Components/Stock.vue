@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="relative flex justify-between gap-x-6 py-2">
         <div class="flex min-w-0 gap-x-4">
             <div class="min-w-0 flex-auto">
                 <p class="text-sm/6 font-semibold text-gray-900">
@@ -48,6 +48,7 @@
 <script setup>
 import { defineProps } from "vue";
 import { relativeDate } from "@/Utilities/date.js";
+import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 
 const props = defineProps(["stock"]);
 </script>
