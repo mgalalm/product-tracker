@@ -37,12 +37,19 @@
                     </div>
                     <p class="text-xs/5 text-gray-500">Out of Stock</p>
                 </div>
-                  <div v-else-if="!stock.tracked" class="mt-1 flex items-center gap-x-1.5">
+                  <div v-else-if="!stock.tracked && stock.is_new" class="mt-1 flex items-center gap-x-1.5">
                     <div class="flex-none rounded-full bg-red-500/20 p-1">
                         <div class="size-1.5 rounded-full bg-red-500" />
                     </div>
                     <p class="text-xs/5 text-gray-500">No tracked yet</p>
                 </div>
+                      <div v-else class="mt-1 flex items-center gap-x-1.5">
+                    <div class="flex-none rounded-full bg-red-500/20 p-1">
+                        <div class="size-1.5 rounded-full bg-yellow-500" />
+                    </div>
+                    <p class="text-xs/5 text-gray-500">Processing</p>
+                </div>
+
             </div>
             <ChevronRightIcon
                 class="size-5 flex-none text-gray-400"

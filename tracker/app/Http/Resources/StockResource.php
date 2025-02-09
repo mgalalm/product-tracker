@@ -21,6 +21,7 @@ class StockResource extends JsonResource
             'product' => $this->whenLoaded('product', fn() => ProductResource::make($this->product)),
             'retailer' => $this->whenLoaded('retailer', fn() => RetailerResource::make($this->retailer)),
             'in_stock' => $this->in_stock,
+            'is_new' => $this->is_new,
             'price' => $this->price,
             'currency' => $this->currency,
             'formatted_price' => $this->formatted_price,
