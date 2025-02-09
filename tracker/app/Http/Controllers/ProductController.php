@@ -9,6 +9,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
 use App\Models\Retailer;
 use App\Http\Resources\RetailerResource;
+use Illuminate\Support\Facades\DB;
 
 
 class ProductController extends Controller
@@ -107,7 +108,20 @@ class ProductController extends Controller
             abort(403);
         }
 
-        $product->delete();
+        DB::transaction(function () use ($product) {
+            $stocks = $product->stocks;
+
+            $product->stocks()->detach();
+
+            $product->delete();
+
+            // delete the stock associated with the product as long it's not associated with another product
+            $stocks->each(function ($stock) {
+                if ($stock->products->isEmpty()) {
+                    $stock->delete();
+                }
+            });
+        });
 
         return to_route('products.index');
     }
