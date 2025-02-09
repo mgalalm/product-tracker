@@ -101,8 +101,12 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {
+        if ($request->user()->id !== $product->user_id) {
+            abort(403);
+        }
+
         $product->delete();
 
         return to_route('products.index');

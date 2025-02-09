@@ -20,3 +20,4 @@ it('throws an exception if the client is not found', function () {
     $stock->track();
 
 });
+

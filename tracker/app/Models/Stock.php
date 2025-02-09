@@ -58,6 +58,13 @@ class Stock extends Model
         return Money::parse($this->price, $this->currency)->format();
     }
 
+     // is new stock if it's not tracked and created less than 5 minutes ago
+    public function getIsNewAttribute()
+    {
+        return !$this->tracked && $this->created_at->gt(now()->subMinutes(5));
+    }
+
+
     // public function getNameAttribute()
     // {
     //     return $this->products->first()->name;
