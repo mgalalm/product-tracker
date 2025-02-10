@@ -29,7 +29,7 @@ class Product extends Model
 
     public function track()
     {
-        $this->load(['stocks'])->stocks->each->track();
+        $this->load(['stocks.retailer'])->stocks->each->track();
     }
 
     // history
