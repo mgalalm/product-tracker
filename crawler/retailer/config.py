@@ -35,10 +35,10 @@ class RetailerConfig(BaseSettings):
             "base_url": "https://www.tesco.ie/groceries/en-IE/products/",
             "selectors": {
                 "name": "h1",
-                "price": "span.price-per-sellable-unit",
-                "availability": "div.product-details-tile__availability"
+                "price": "p[class*='styled__PriceText']",
+                "availability": 'span:contains("out of stock")'
             },
-            "driver_mode": "local"
+            "driver_mode": "remote"
         },
         "dunnes": {
             "base_url": "https://www.dunnesstoresgrocery.com/product/", # dunnes/100274908
