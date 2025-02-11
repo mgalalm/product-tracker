@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\ProductUrlValidation;
+use Gate;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
@@ -10,6 +11,7 @@ use App\Http\Resources\StockResource;
 use App\Models\Retailer;
 use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
+
 
 
 class ProductController extends Controller
@@ -104,9 +106,7 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, Product $product)
     {
-        if ($request->user()->id !== $product->user_id) {
-            abort(403);
-        }
+        Gate::authorize('delete', $product);
 
         DB::transaction(function () use ($product) {
             $stocks = $product->stocks;
