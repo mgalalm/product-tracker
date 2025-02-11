@@ -4,3 +4,4 @@ webdriver-manager
 six
 beautifulsoup4
 pydantic_settings
+pytest
