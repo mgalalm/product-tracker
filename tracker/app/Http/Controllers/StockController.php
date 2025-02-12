@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Gate;
 use Illuminate\Http\Request;
+use App\Models\Stock;
+use App\Models\Product;
 
 class StockController extends Controller
 {
@@ -29,6 +32,7 @@ class StockController extends Controller
     {
         //
     }
+
 
     /**
      * Display the specified resource.
@@ -57,8 +61,10 @@ class StockController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, Product $product , Stock $stock)
     {
-        //
+        Gate::authorize('delete', $stock);
+        $product->stocks()->detach($stock);
+        return to_route('products.show', $product->id);
     }
 }
