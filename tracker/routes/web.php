@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StockController;
 use App\Http\Resources\{
     ProductResource,
     RetailerResource,
@@ -37,6 +38,7 @@ Route::middleware([
     })->name('dashboard');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::delete('/products/{product}/stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
 });
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

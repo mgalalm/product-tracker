@@ -51,10 +51,31 @@
                 </div>
 
             </div>
-            <ChevronRightIcon
+            <!-- <ChevronRightIcon
                 class="size-5 flex-none text-gray-400"
                 aria-hidden="true"
-            />
+            /> -->
+            <Menu as="div" class="relative flex-none">
+          <MenuButton class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
+            <span class="sr-only">Open options</span>
+            <EllipsisVerticalIcon class="size-5" aria-hidden="true" />
+          </MenuButton>
+          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+            <MenuItems class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+              <MenuItem v-slot="{ active }">
+                <a :href="stock.url" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
+                  >View stock<span class="sr-only">, {{ stock.url }}</span></a
+                >
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+
+                    <a href="#" @click="deleteStock" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
+                      >Remove<span class="sr-only">, {{ stock.id }}</span></a
+                    >
+              </MenuItem>
+            </MenuItems>
+          </transition>
+        </Menu>
         </div>
     </div>
 </template>
@@ -63,6 +84,23 @@
 import { defineProps } from "vue";
 import { relativeDate } from "@/Utilities/date.js";
 import { ChevronRightIcon } from "@heroicons/vue/20/solid";
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
+import { router, usePage } from "@inertiajs/vue3";
 
+
+const productId = usePage().props.product.id;
 const props = defineProps(["stock"]);
+
+// get the product id from the url
+// const productId = window.location.pathname.split("/").pop();
+
+const deleteStock = () => router.delete(route("stocks.destroy", [productId , props.stock.id]),
+    {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log("deleted");
+        },
+    }
+);
 </script>
