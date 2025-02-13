@@ -61,13 +61,28 @@ class Stock extends Model
      // is new stock if it's not tracked and created less than 5 minutes ago
     public function getIsNewAttribute()
     {
+
         return !$this->tracked && $this->created_at->gt(now()->subMinutes(5));
     }
 
+    // get tacked attribute
+    public function getTrackedAttribute()
+    {
+        return !is_null($this->in_stock);
+    }
 
-    // public function getNameAttribute()
-    // {
-    //     return $this->products->first()->name;
-    // }
+    // get status attribute
+    public function getStatusAttribute()
+    {
+        if ($this->is_new) {
+            return 'Not Tracked Yet';
+        }
+
+        if (!$this->tracked) {
+            return 'Processing';
+        }
+
+        return $this->in_stock ? 'In Stock' : 'Out of Stock';
+    }
 
 }

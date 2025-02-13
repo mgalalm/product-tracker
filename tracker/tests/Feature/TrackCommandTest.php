@@ -95,5 +95,4 @@ it('notify the user when the price drops', function () {
 
    Event::assertDispatched(PriceDropped::class);
 
-
 });

@@ -38,7 +38,7 @@ class TrackProduct implements ShouldQueue
             'in_stock' => $status->available,
             'price' => $status->price->getAmount(),
             'currency' => $status->price->getCurrency(),
-            'tracked' => true,
+            // 'tracked' => true,
         ]);
 
 

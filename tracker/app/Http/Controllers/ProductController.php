@@ -63,7 +63,7 @@ class ProductController extends Controller
         ] ,[
             'price' => 0,
             'url' => $data['stockUrl'],
-            'in_stock' => false,
+            // 'in_stock' => false,
             'retailer_id' => $data['retailer'],
             'sku' => $sku,
         ]);

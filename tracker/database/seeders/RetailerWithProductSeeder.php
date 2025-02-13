@@ -23,7 +23,6 @@ class RetailerWithProductSeeder extends Seeder
             'url' => 'http://www.amazon.uk/dp/12345678',
             'in_stock' => false,
             'sku' => '12345',
-            'tracked' => true,
         ]);
 
         $amazon_uk->addStock($my_book, $stock);

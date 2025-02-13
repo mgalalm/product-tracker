@@ -27,7 +27,8 @@ class StockResource extends JsonResource
             'formatted_price' => $this->formatted_price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'tracked' => $this->tracked,
+            // 'tracked' => $this->tracked,
+            'status' => $this->status,
         ];
     }
 }
