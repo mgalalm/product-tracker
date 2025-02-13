@@ -23,38 +23,14 @@
                 </p>
 
                 <div
-                    v-if="stock.tracked && stock.in_stock"
                     class="mt-1 flex items-center gap-x-1.5"
                 >
-                    <div class="flex-none rounded-full bg-emerald-500/20 p-1">
-                        <div class="size-1.5 rounded-full bg-emerald-500" />
+                    <div class="flex-none rounded-full p-1 bg-opacity-20" :class="statusColor">
+                        <div class="size-1.5 rounded-full" :class="statusColor" />
                     </div>
-                    <p class="text-xs/5 text-gray-500">In Stock</p>
+                    <p class="text-xs/5 text-gray-500">{{ stock.status }}</p>
                 </div>
-                <div v-else-if="stock.tracked && !stock.in_stock" class="mt-1 flex items-center gap-x-1.5">
-                    <div class="flex-none rounded-full bg-red-500/20 p-1">
-                        <div class="size-1.5 rounded-full bg-red-500" />
-                    </div>
-                    <p class="text-xs/5 text-gray-500">Out of Stock</p>
-                </div>
-                  <div v-else-if="!stock.tracked && stock.is_new" class="mt-1 flex items-center gap-x-1.5">
-                    <div class="flex-none rounded-full bg-red-500/20 p-1">
-                        <div class="size-1.5 rounded-full bg-red-500" />
-                    </div>
-                    <p class="text-xs/5 text-gray-500">No tracked yet</p>
-                </div>
-                      <div v-else class="mt-1 flex items-center gap-x-1.5">
-                    <div class="flex-none rounded-full bg-red-500/20 p-1">
-                        <div class="size-1.5 rounded-full bg-yellow-500" />
-                    </div>
-                    <p class="text-xs/5 text-gray-500">Processing</p>
-                </div>
-
             </div>
-            <!-- <ChevronRightIcon
-                class="size-5 flex-none text-gray-400"
-                aria-hidden="true"
-            /> -->
             <Menu as="div" class="relative flex-none">
           <MenuButton class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
             <span class="sr-only">Open options</span>
@@ -87,6 +63,7 @@ import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { router, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 
 const productId = usePage().props.product.id;
@@ -103,4 +80,19 @@ const deleteStock = () => router.delete(route("stocks.destroy", [productId , pro
         },
     }
 );
+
+const statusColor = computed(() => {
+    console.log(props.stock.status);
+    switch(props.stock.status) {
+        case "In Stock":
+            return "bg-emerald-500";
+        case "Out of Stock":
+            return "bg-red-500";
+        case "Not Tracked Yet":
+            return "bg-red-500";
+        default:
+            return "bg-yellow-500";
+    }
+
+});
 </script>
