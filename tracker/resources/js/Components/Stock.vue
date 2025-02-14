@@ -1,6 +1,7 @@
 <template>
     <div class="relative flex justify-between gap-x-6 py-2">
         <div class="flex min-w-0 gap-x-4">
+            <!-- <img class="size-11 flex-none rounded-full bg-gray-50" :src="'https://www.tesco.com/assets/mfe-digital-content/77a8a58c7a7117ae7ae6d0d4c504195a.png'" alt="" /> -->
             <div class="min-w-0 flex-auto">
                 <p class="text-sm/6 font-semibold text-gray-900">
                     <a :href="stock.url">
@@ -45,7 +46,7 @@
               </MenuItem>
               <MenuItem v-slot="{ active }">
 
-                    <a href="#" @click="deleteStock" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
+                    <a href="#" @click="$emit('delete', stock.id)" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
                       >Remove<span class="sr-only">, {{ stock.id }}</span></a
                     >
               </MenuItem>
@@ -59,7 +60,6 @@
 <script setup>
 import { defineProps } from "vue";
 import { relativeDate } from "@/Utilities/date.js";
-import { ChevronRightIcon } from "@heroicons/vue/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid'
 import { router, usePage } from "@inertiajs/vue3";
@@ -68,21 +68,10 @@ import { computed } from "vue";
 
 const productId = usePage().props.product.id;
 const props = defineProps(["stock"]);
+const emit = defineEmits(["delete"]);
 
-// get the product id from the url
-// const productId = window.location.pathname.split("/").pop();
-
-const deleteStock = () => router.delete(route("stocks.destroy", [productId , props.stock.id]),
-    {
-        preserveScroll: true,
-        onSuccess: () => {
-            console.log("deleted");
-        },
-    }
-);
 
 const statusColor = computed(() => {
-    console.log(props.stock.status);
     switch(props.stock.status) {
         case "In Stock":
             return "bg-emerald-500";

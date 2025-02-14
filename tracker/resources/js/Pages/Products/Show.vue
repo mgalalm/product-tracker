@@ -32,6 +32,15 @@ const formattedDate = computed(() => fullMonth(props.product.created_at));
 
 const deleteProduct = () => router.delete(route("products.destroy", props.product.id));
 
+const deleteStock = (stockId) => router.delete(route("stocks.destroy", [props.product.id , stockId]),
+    {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log("deleted");
+        },
+    }
+);
+
 </script>
 <template>
     <AppLayout :title="product.name">
@@ -105,7 +114,7 @@ const deleteProduct = () => router.delete(route("products.destroy", props.produc
                         :key="stock.id"
 
                     >
-                        <Stock :stock="stock" />
+                        <Stock :stock="stock" @delete="deleteStock"/>
                     </li>
                 </ul>
             </div>
