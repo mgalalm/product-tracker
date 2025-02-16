@@ -39,6 +39,7 @@ Route::middleware([
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::delete('/products/{product}/stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
+    Route::put('/products/{product}/stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
 });
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

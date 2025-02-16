@@ -32,7 +32,7 @@ class Tesco implements Client
     public function getProductURLPatterns(): array
     {
         return [
-            '/(?:products)\/.*-(\d+)/'
+            '/(?:products)\/(\d+)/'
         ];
     }
 }

@@ -37,16 +37,17 @@
                         <div
                             class="mt-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
                         >
-                            <div class="sm:col-span-4">
-                                <GroupInput
-                                v-model:select="productForm.retailer"
-                                v-model:input="productForm.stockUrl"
+                        <div class="sm:col-span-4" v-for="(stock, index) in productForm.stocks" :key="index">
+                            <GroupInput
+                                v-model:select="stock.retailer"
+                                v-model:input="stock.url"
                                 :options="options"
-                                ></GroupInput>
-                                <InputError :message="productForm.errors.retailer" class="mt-1"/>
-                                <InputError :message="productForm.errors.stockUrl" class="mt-1"/>
-
-                            </div>
+                            ></GroupInput>
+                            <InputError :message="productForm.errors[`stocks.${index}.retailer`]" class="mt-1"/>
+                            <InputError :message="productForm.errors[`stocks.${index}.url`]" class="mt-1"/>
+                            <button type="button" @click="removeStock(index)" class="text-red-500">Remove</button>
+                        </div>
+                        <button type="button" @click="addStock" class="mt-2 text-blue-500">Add Stock</button>
                         </div>
                     </div>
                 </div>
@@ -76,10 +77,24 @@ import InputError from "@/Components/InputError.vue";
 
 const productForm = useForm({
     name: "",
-    retailer: "",
-    stockUrl: "",
+    stocks: [
+        {
+            retailer: "",
+            url: "",
+        },
+    ],
 });
 
+const addStock = () => {
+    productForm.stocks.push({
+        retailer: "",
+        url: "",
+    });
+};
+
+const removeStock = (index) => {
+    productForm.stocks.splice(index, 1);
+};
 
 const addProduct = () => {
     // console.log(productForm);
@@ -89,8 +104,8 @@ const addProduct = () => {
         onSuccess: () => {
 
         },
-        onError: () => {
-            // console.log(result);
+        onError: (errors) => {
+            console.log(errors);
         },
     });
 
