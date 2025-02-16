@@ -22,21 +22,48 @@ it('can store a product', function () {
         'domain' => 'example.com',
     ]);
 
-    actingAs($user)->post(route('products.store'),  [
+    actingAs($user)->post(route('products.store'), [
         'name' => 'This is a product',
-        'stockUrl' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
-        'retailer' => $retailer->id,
+        'stocks' => [
+            [
+                'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+                'retailer' => $retailer->id,
+            ],
+            [
+                'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-20000.html',
+                'retailer' => $retailer->id,
+            ]
+
+        ],
 
     ])->assertStatus(302)
-    ->assertSessionHasNoErrors();
+        ->assertSessionHasNoErrors();
+
     $this->assertDatabaseHas(Product::class, [
         'name' => 'This is a product',
+    ]);
+
+    $this->assertDatabaseHas('stocks', [
+        'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+        'retailer_id' => $retailer->id,
+        'sku' => 10255167,
+    ]);
+
+    $this->assertDatabaseHas('stocks', [
+        'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-20000.html',
+        'retailer_id' => $retailer->id,
+        'sku' => 20000,
     ]);
 
     // no notification should be sent as the stock is added for the first time
     Notification::assertNothingSent();
 
 });
+
+
+// it avoid storing the same stock twice
+
+// it()
 
 it('redirects to the product page after storing', function () {
     $user = User::factory()->create();
@@ -49,10 +76,15 @@ it('redirects to the product page after storing', function () {
     ]);
 
 
-    actingAs($user)->post(route('products.store'),  [
+    actingAs($user)->post(route('products.store'), [
         'name' => 'This is a product',
-        'stockUrl' => 'https://example.com/',
-        'retailer' => $retailer->id,
+        'stocks' => [
+            [
+                'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+                'retailer' => $retailer->id,
+            ]
+        ]
+
     ])->assertRedirect(route('products.index'));
 
 });
@@ -60,33 +92,46 @@ it('redirects to the product page after storing', function () {
 it('require a valid product name', function ($value) {
     $user = User::factory()->create();
 
-    actingAs($user)->post(route('products.store'),  [
+    actingAs($user)->post(route('products.store'), [
         'name' => $value,
     ])->assertInvalid('name');
 
 })->with([
-    'null' => null,
-    'empty' => '',
-    'whitespace' => ' ',
-    'too long' => str_repeat('a', 256),
-    'boolean' => true,
-]);
+            'null' => null,
+            'empty' => '',
+            'whitespace' => ' ',
+            'too long' => str_repeat('a', 256),
+            'boolean' => true,
+        ]);
 
 
 it('require a valid retailer', function ($value) {
     $user = User::factory()->create();
 
-    actingAs($user)->post(route('products.store'),  [
-        'retailer' => $value,
-    ])->assertInvalid('retailer');
+    mockClientRequest();
+
+    $response = actingAs($user)->post(route('products.store'), [
+
+            'name' => 'This is a product',
+            'stocks' => [
+                [
+                    'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+                    'retailer' => $value,
+                ]
+            ],
+
+        ]);
+        // dd($response);
+    $response->assertInvalid('stocks.0.retailer');
+    // $response->assertSessionHasErrors('stocks.0.retailer');
 
 })->with([
-    'null' => null,
-    'empty' => '',
-    'whitespace' => ' ',
-    'not exists' => 100,
-    'boolean' => true,
-]);
+            'null' => null,
+            'empty' => '',
+            'whitespace' => ' ',
+            'not exists' => 100,
+            'boolean' => true,
+        ]);
 
 it('require a valid stock url', function ($value) {
     $user = User::factory()->create();
@@ -100,14 +145,19 @@ it('require a valid stock url', function ($value) {
 
 
     actingAs($user)->post(route('products.store'),  [
-        'stockUrl' => $value,
-        'retailer' => $retailer->id,
-    ])->assertInvalid('stockUrl');
+        'name' => 'This is a product',
+        'stocks' => [
+            [
+                'url' => $value,
+                'retailer' => $retailer->id,
+            ]
+        ],
+    ])->assertInvalid('stocks.0.url');
 
 })->with([
     'null' => null,
     'empty' => '',
     'whitespace' => ' ',
     'not url' => 'not-url',
-    'not valid url' => 'https://example.com',
+    'not valid url' => 'https://example1.com',
 ]);

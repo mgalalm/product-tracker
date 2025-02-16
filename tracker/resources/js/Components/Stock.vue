@@ -41,7 +41,7 @@
             <MenuItems class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               <MenuItem v-slot="{ active }">
                 <a :href="stock.url" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
-                  >View stock<span class="sr-only">, {{ stock.url }}</span></a
+                  >Edit<span class="sr-only">, {{ stock.url }}</span></a
                 >
               </MenuItem>
               <MenuItem v-slot="{ active }">

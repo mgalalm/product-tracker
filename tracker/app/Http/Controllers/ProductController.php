@@ -11,7 +11,8 @@ use App\Http\Resources\StockResource;
 use App\Models\Retailer;
 use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 
 class ProductController extends Controller
@@ -41,32 +42,32 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // validate the request
         $data = $request->validate([
             'name'  => ['required', 'string', 'max:255'],
-            'retailer' => ['required', 'exists:retailers,id'],
-            'stockUrl' => ['required', 'url', new ProductUrlValidation],
+            'stocks' => ['required', 'array'],
+
+            'stocks.*.retailer' => ['bail', 'required',
+                'required',
+                Rule::exists('retailers', 'id')],
+            'stocks.*.url' => ['required', 'url', new ProductUrlValidation],
+            'stocks.*.sku' => ['sometimes', 'required'],
         ]);
-
-        // get sku from session
-        $sku = session()->get('sku');
-
-        // create product
         $product = $request->user()->products()->create([
             'name' => $data['name'],
         ]);
 
-        // create stock
-        $product->stocks()->firstOrCreate([
-            'sku' => $sku,
-            'retailer_id' => $data['retailer'],
-        ] ,[
-            'price' => 0,
-            'url' => $data['stockUrl'],
-            // 'in_stock' => false,
-            'retailer_id' => $data['retailer'],
-            'sku' => $sku,
-        ]);
+
+        collect($data['stocks'])->each(function ($stock) use ($product) {
+            $product->stocks()->firstOrCreate(
+                [
+                    'sku' => $stock['sku'],
+                    'retailer_id' => $stock['retailer'],
+                ],
+                [
+                    'url' => $stock['url'],
+                ]
+            );
+        });
 
         return to_route('products.index');
     }

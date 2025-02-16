@@ -12,6 +12,7 @@ it('can detach a stock', function () {
     seed(RetailerWithProductSeeder::class);
     $stock = Stock::first();
     $product = $stock->products->first();
+
     actingAs($product->user)->delete(route('stocks.destroy', [$product, $stock])
         )->assertRedirect(route('products.show', $product));
 
