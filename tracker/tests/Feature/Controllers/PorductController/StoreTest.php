@@ -60,10 +60,46 @@ it('can store a product', function () {
 
 });
 
+it('avoid storing the same stock twice', function() {
+    $user = User::factory()->create();
 
-// it avoid storing the same stock twice
+    mockClientRequest(pattern: '/(?:products)\/.*-(\d+)(?=\.html)/');
 
-// it()
+    $retailer = Retailer::factory()->create([
+        'name' => 'Test',
+        'domain' => 'example.com',
+    ]);
+
+    $stock_url = 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html';
+    actingAs($user)->post(route('products.store'), [
+        'name' => 'This is a product',
+        'stocks' => [
+            [
+                'url' => $stock_url,
+                'retailer' => $retailer->id,
+            ],
+            [
+                'url' => $stock_url,
+                'retailer' => $retailer->id,
+            ]
+
+        ],
+
+    ])->assertStatus(302)
+        ->assertSessionHasNoErrors();
+
+    $this->assertDatabaseHas(Product::class, [
+        'name' => 'This is a product',
+    ]);
+
+    $this->assertDatabaseHas('stocks', [
+        'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+        'retailer_id' => $retailer->id,
+        'sku' => 10255167,
+    ]);
+
+    $this->assertCount(1, Product::first()->stocks);
+});
 
 it('redirects to the product page after storing', function () {
     $user = User::factory()->create();
@@ -110,7 +146,7 @@ it('require a valid retailer', function ($value) {
 
     mockClientRequest();
 
-    $response = actingAs($user)->post(route('products.store'), [
+    actingAs($user)->post(route('products.store'), [
 
             'name' => 'This is a product',
             'stocks' => [
@@ -120,10 +156,7 @@ it('require a valid retailer', function ($value) {
                 ]
             ],
 
-        ]);
-        // dd($response);
-    $response->assertInvalid('stocks.0.retailer');
-    // $response->assertSessionHasErrors('stocks.0.retailer');
+        ])->assertInvalid('stocks.0.retailer');
 
 })->with([
             'null' => null,

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\ProductUrlValidation;
-use Gate;
+use App\Rules\StockUrlValidation;
+
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\ {Product};
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
 use App\Models\Retailer;
 use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
+use Gate;
 
 
 class ProductController extends Controller
@@ -20,10 +20,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
         return inertia('Products/Index', [
-            'products' => ProductResource::collection(Product::latest()->latest('id')->paginate()),
+            'products' => ProductResource::collection($request->user()->products()->latest()->latest('id')->paginate()),
         ]);
     }
 
@@ -49,13 +50,13 @@ class ProductController extends Controller
             'stocks.*.retailer' => ['bail', 'required',
                 'required',
                 Rule::exists('retailers', 'id')],
-            'stocks.*.url' => ['required', 'url', new ProductUrlValidation],
+            'stocks.*.url' => ['required', 'url', new StockUrlValidation],
             'stocks.*.sku' => ['sometimes', 'required'],
         ]);
+
         $product = $request->user()->products()->create([
             'name' => $data['name'],
         ]);
-
 
         collect($data['stocks'])->each(function ($stock) use ($product) {
             $product->stocks()->firstOrCreate(
@@ -77,7 +78,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // load the stocks relationship
+        Gate::authorize('view', $product);
+
         $product->load('stocks');
 
         return inertia('Products/Show', [
@@ -97,9 +99,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+
     }
 
     /**

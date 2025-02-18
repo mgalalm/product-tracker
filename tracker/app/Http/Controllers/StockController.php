@@ -6,9 +6,11 @@ use Gate;
 use Illuminate\Http\Request;
 use App\Models\Stock;
 use App\Models\Product;
+use App\Rules\StockUrlValidation;
 
 class StockController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -53,9 +55,28 @@ class StockController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product, Stock $stock)
     {
-        //
+        Gate::authorize('update', [$stock, $product]);
+
+        $data = $request->validate([
+            'retailer' => ['required', 'exists:retailers,id'],
+            'url' => ['required', 'url', new StockUrlValidation],
+        ]);
+
+        $product->stocks()->detach($stock);
+
+        $product->stocks()->firstOrCreate(
+            [
+                'retailer_id' => $data['retailer'],
+                'url' => $data['url'],
+            ],
+            [
+                'sku' => $stock->sku,
+            ]
+        );
+
+        return to_route('products.show', $product->id);
     }
 
     /**
@@ -63,7 +84,8 @@ class StockController extends Controller
      */
     public function destroy(Request $request, Product $product , Stock $stock)
     {
-        Gate::authorize('delete', $stock);
+        Gate::authorize('delete', [$stock, $product]);
+
         $product->stocks()->detach($stock);
         return to_route('products.show', $product->id);
     }
