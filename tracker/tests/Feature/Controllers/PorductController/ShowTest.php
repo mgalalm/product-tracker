@@ -4,11 +4,15 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
 use App\Models\Product;
 use Database\Seeders\RetailerWithProductSeeder;
+use App\Models\User;
+
+use function Pest\Laravel\actingAs;
+
 
 it('can show a product', function () {
     $product = Product::factory()->create();
-
-    $this->get(route('products.show', $product))
+    actingAs($product->user)->
+    get(route('products.show', $product))
         ->assertComponent('Products/Show');
 });
 
@@ -20,7 +24,7 @@ it('passes the product to the view', function () {
     // load the stocks relationship
     $product->load('stocks');
 
-    $this->get(route('products.show', $product))
+    actingAs($product->user)->get(route('products.show', $product))
         ->assertHasResource('product', ProductResource::make($product));
 });
 
@@ -38,6 +42,15 @@ it('passes stocks to the view', function () {
 
     $stocks->load('retailer');
 
-    $this->get(route('products.show', $product))
+    actingAs($product->user)->get(route('products.show', $product))
         ->assertHasPaginatedResource('stocks', StockResource::collection($stocks->reverse()));
+});
+
+
+
+it('can\'t show a product with a different user', function () {
+    $product = Product::factory()->create();
+    actingAs(User::factory()->create())->
+    get(route('products.show', $product))
+        ->assertForbidden();
 });
