@@ -9,7 +9,9 @@ import Pagination from "@/Components/Pagination.vue";
 import { relativeDate, fullMonth } from "@/Utilities/date.js";
 import Heading from "@/Components/Heading.vue";
 // import router from "@/router";
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
+import { visitModal } from '@inertiaui/modal-vue'
+
 
 
 import {
@@ -29,6 +31,15 @@ import {
 const props = defineProps(["product", "stocks"]);
 
 const formattedDate = computed(() => fullMonth(props.product.created_at));
+
+const stockIdBeingEdited = ref(null);
+
+
+
+const editStock = (stockId) => {
+    stockIdBeingEdited.value = stockId;
+    visitModal(route("products.stocks.edit", [props.product.id, stockId]));
+};
 
 const deleteProduct = () => router.delete(route("products.destroy", props.product.id));
 
@@ -114,7 +125,7 @@ const deleteStock = (stockId) => router.delete(route("products.stocks.destroy", 
                         :key="stock.id"
 
                     >
-                        <Stock :stock="stock" @delete="deleteStock"/>
+                        <Stock :stock="stock" @edit="editStock" @delete="deleteStock"/>
                     </li>
                 </ul>
             </div>

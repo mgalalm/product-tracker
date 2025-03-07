@@ -3,7 +3,7 @@ import os
 
 year = input("Enter the year: ")
 # Define the folder path
-pdf_folder = os.path.expanduser(f"~/Dropbox/Adan/Adnan/{year}/")  
+pdf_folder = os.path.expanduser(f"~/Dropbox/Adan/Adnan 3/{year}_join/")  
 output_pdf = os.path.join(pdf_folder, f"{year}.pdf")
 
 def merge_pdfs(folder, output_file):

@@ -39,10 +39,14 @@
           </MenuButton>
           <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
             <MenuItems class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-              <MenuItem v-slot="{ active }">
+              <!-- <MenuItem v-slot="{ active }">
                 <a :href="stock.url" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
-                  >Edit<span class="sr-only">, {{ stock.url }}</span></a
-                >
+                  >Visit<span class="sr-only">, {{ stock.url }}</span></a>
+              </MenuItem> -->
+
+              <MenuItem v-slot="{ active }">
+                <a href="#" @click="$emit('edit', stock.id)" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
+                  >Edit<span class="sr-only">, {{ stock.url }}</span></a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
 
@@ -68,7 +72,7 @@ import { computed } from "vue";
 
 const productId = usePage().props.product.id;
 const props = defineProps(["stock"]);
-const emit = defineEmits(["delete"]);
+const emit = defineEmits(["edit", "delete"]);
 
 
 const statusColor = computed(() => {

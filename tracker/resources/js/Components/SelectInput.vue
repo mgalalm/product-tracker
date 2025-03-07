@@ -5,22 +5,23 @@
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
         >
-            <option v-for="option in options" :value="option.key" :key="option.value">
+            <option v-for="option in options" :value="option.key" :key="option.value" :selected="option.key === modelValue">
                 {{ option.value }}
             </option>
         </select>
-        <ChevronDownIcon
+        <!-- <ChevronDownIcon
             class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
             aria-hidden="true"
-        />
+        /> -->
     </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, onMounted } from "vue";
 import { ChevronDownIcon } from "@heroicons/vue/16/solid";
 
-defineProps({
+
+const props = defineProps({
     modelValue: String,
     options: {
         type: Array,
@@ -28,4 +29,11 @@ defineProps({
         // Each option should have { value, label } properties
     },
 });
+
+onMounted(() => {
+    console.log(props.modelValue);
+});
+
+// log the modelValue and options
+// console.log(props.modelValue);
 </script>

@@ -7,10 +7,6 @@
                         <h2 class="text-base/7 font-semibold text-gray-900">
                             Product
                         </h2>
-                        <!-- <p class="mt-1 text-sm/6 text-gray-600">
-                            This information will be displayed publicly so be
-                            careful what you share.
-                        </p> -->
                         <div
                             class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
                         >
@@ -47,7 +43,7 @@
                             <InputError :message="productForm.errors[`stocks.${index}.url`]" class="mt-1"/>
                             <button type="button" @click="removeStock(index)" class="text-red-500">Remove</button>
                         </div>
-                        <button type="button" @click="addStock" class="mt-2 text-blue-500">Add Stock</button>
+                            <button type="button" @click="addStock" class="mt-2 text-blue-500">Add Stock</button>
                         </div>
                     </div>
                 </div>
@@ -97,7 +93,6 @@ const removeStock = (index) => {
 };
 
 const addProduct = () => {
-    // console.log(productForm);
 
     productForm.post(route("products.store"), {
         preserveScroll: true,
@@ -111,7 +106,6 @@ const addProduct = () => {
 
 
 };
-
 
 const props = defineProps({
     retailers: {

@@ -10,6 +10,7 @@
         "aws/aws-sdk-php": "^3.336",
         "cknow/laravel-money": "^8.2",
         "inertiajs/inertia-laravel": "^1.0",
+        "inertiaui/modal": "^0.19.4",
         "itsgoingd/clockwork": "^5.3",
         "laravel/framework": "^11.31",
         "laravel/horizon": "^5.30",

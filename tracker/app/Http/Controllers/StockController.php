@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Stock;
 use App\Models\Product;
 use App\Rules\StockUrlValidation;
+use App\Models\Retailer;
+use App\Http\Resources\StockResource;
 
 class StockController extends Controller
 {
@@ -47,9 +49,16 @@ class StockController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product, Stock $stock)
     {
         //
+
+
+        return inertia('Stocks/Edit', [
+            'stock' => StockResource::make($stock->load('retailer')),
+            'retailers' => Retailer::all(),
+            'product' => $product,
+        ]);
     }
 
     /**
