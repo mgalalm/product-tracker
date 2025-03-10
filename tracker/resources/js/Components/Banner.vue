@@ -6,11 +6,24 @@ const page = usePage();
 const show = ref(true);
 const style = ref('success');
 const message = ref('');
+const timeout = ref(null);
 
 watchEffect(async () => {
     style.value = page.props.jetstream.flash?.bannerStyle || 'success';
     message.value = page.props.jetstream.flash?.banner || '';
     show.value = true;
+
+
+    clearTimeout(timeout.value);
+
+    timeout.value = setTimeout(() => {
+        show.value = false;
+    }, 5000);
+});
+
+// time out when component is unmounted e.g when navigating to another page or the user closes the banner
+onUnmounted(() => {
+    clearTimeout(timeout.value);
 });
 </script>
 
