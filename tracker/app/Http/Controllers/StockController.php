@@ -85,7 +85,8 @@ class StockController extends Controller
             ]
         );
 
-        return to_route('products.show', $product->id);
+        return to_route('products.show', $product->id)
+            ->banner("Stock has been updated successfully.");
     }
 
     /**
