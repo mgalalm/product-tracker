@@ -127,6 +127,7 @@ class ProductController extends Controller
             });
         });
 
-        return to_route('products.index');
+        return to_route('products.index')
+            ->banner("Product {$product->name} has been deleted successfully.");
     }
 }
