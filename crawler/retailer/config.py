@@ -48,7 +48,16 @@ class RetailerConfig(BaseSettings):
                 "availability": "span.availability"
             },
             "driver_mode": "remote"
-        }
+        },
+        "smyths": {
+            "base_url": "https://www.smythstoys.com/ie/en-ie/p/", #p/171375
+            "selectors": {
+                "name": "h1",
+                "price": "div.price_tag span",
+                "availability": "p.js-stockStatus"
+            },
+            "driver_mode": "remote"
+        },
     }
     
     bd_proxy_url: str

@@ -41,7 +41,6 @@ class DatabaseSeeder extends Seeder
                     'retailer_id' => Retailer::factory()->create(['name' => 'Currys', 'domain' => 'currys.ie'])->id,
                     'price' => 349,
                     'url' => 'https://www.currys.ie/products/logik-lsd55w23-5050-fridge-freezer-white-10248709.html',
-                    // 'in_stock' => false,
                     'sku' => '10248709',
                 ],
 
@@ -60,18 +59,33 @@ class DatabaseSeeder extends Seeder
                         'price' => 12.70,
                         'currency' => 'EUR',
                         'url' => "https://www.dunnesstoresgrocery.com/sm/delivery/rsid/428/product/l'or-classique-instant-coffee-150g-id-100274908",
-                        // 'in_stock' => false,
                         'sku' => '100274908',
                     ],
                     [
                         'retailer_id' => Retailer::factory()->create(['name' => 'Tesco', 'domain' => 'tesco.ie'])->id,
                         'price' => 1149,
                         'url' => 'https://www.tesco.ie/groceries/en-IE/products/312095473',
-                        // 'in_stock' => false,
                         'sku' => '312095473',
                     ]
                 ]
 
             );
+
+            // https://www.smythstoys.com/ie/en-ie/outdoor/electric-ride-ons/electric-wheeled/bmw-police-motorcycle-12v-electric-ride-on/p/171375
+        Product::factory()->create(
+            [
+                'name' => "BMW Police Motorcycle 12V Electric Ride On",
+                'user_id' => $admin->id,
+            ]
+        )->stocks()->create(
+                [
+                    'retailer_id' => Retailer::factory()->create(['name' => 'Smyths', 'domain' => 'smythstoys.com'])->id,
+                    'price' => 13999,
+                    'url' => 'https://www.smythstoys.com/ie/en-ie/outdoor/electric-ride-ons/electric-wheeled/bmw-police-motorcycle-12v-electric-ride-on/p/171375',
+                    'sku' => '171375',
+                ]
+
+            );
+
     }
 }
