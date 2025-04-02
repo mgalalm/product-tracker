@@ -2,8 +2,8 @@
     <AppLayout>
         <Container>
             <form @submit.prevent="addProduct">
-                <div class="space-y-12">
-                    <div class="border-b border-gray-900/10 pb-12">
+                <div class="space-y-4">
+                    <div class="border-b border-gray-900/10 pb-8">
                         <h2 class="text-base/7 font-semibold text-gray-900">
                             Product
                         </h2>
@@ -12,12 +12,12 @@
                         >
                             <div class="sm:col-span-4">
                                 <label
-                                    for="email"
+                                    for="name"
                                     class="block text-sm/6 font-medium text-gray-900 sr-only"
                                     >Name</label
                                 >
                                 <div class="mt-2">
-                                    <TextInput v-model="productForm.name" placeholder="Name of your product here"/>
+                                    <TextInput v-model="productForm.name" placeholder="Name of your product here" id="name"/>
                                     <InputError :message="productForm.errors.name" class="mt-1"/>
                                 </div>
                             </div>
@@ -28,15 +28,18 @@
                             Retailers
                         </h2>
                         <p class="mt-1 text-sm/6 text-gray-600">
-                            Use a permanent address where you can receive mail.
+                            Add the retailers where you can find this product.
+                            You can add multiple retailers.
                         </p>
                         <div
-                            class="mt-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
+                            class="mt-1 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6"
                         >
                         <div class="sm:col-span-4" v-for="(stock, index) in productForm.stocks" :key="index">
                             <GroupInput
                                 v-model:select="stock.retailer"
                                 v-model:input="stock.url"
+                                :placeholder="'Stock URL'"
+                                :name="'stocks.' + index + '.url'"
                                 :options="options"
                             ></GroupInput>
                             <InputError :message="productForm.errors[`stocks.${index}.retailer`]" class="mt-1"/>

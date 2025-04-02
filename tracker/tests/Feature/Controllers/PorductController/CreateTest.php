@@ -14,3 +14,9 @@ it('doesn\'t show create product form for guest', function () {
     $this->get(route('products.create'))
         ->assertRedirect(route('login'));
 });
+
+it('returns the correct component', function () {
+    $user = User::factory()->create();
+    actingAs($user)->get(route('products.create'))
+        ->assertComponent('Products/Create');
+});

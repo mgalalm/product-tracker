@@ -70,7 +70,7 @@ class ProductController extends Controller
             );
         });
 
-        return to_route('products.index')
+        return to_route('products.show', $product)
             ->banner("Product {$product->name} has been created successfully.");
     }
 

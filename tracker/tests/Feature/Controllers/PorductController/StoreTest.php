@@ -41,6 +41,7 @@ it('can store a product', function () {
 
     $this->assertDatabaseHas(Product::class, [
         'name' => 'This is a product',
+        'user_id' => $user->id,
     ]);
 
     $this->assertDatabaseHas('stocks', [
@@ -101,7 +102,7 @@ it('avoid storing the same stock twice', function() {
     $this->assertCount(1, Product::first()->stocks);
 });
 
-it('redirects to the product page after storing', function () {
+it('redirects to the product show page', function () {
     $user = User::factory()->create();
 
     mockClientRequest();
@@ -121,7 +122,7 @@ it('redirects to the product page after storing', function () {
             ]
         ]
 
-    ])->assertRedirect(route('products.index'));
+    ])->assertRedirect(route('products.show', Product::latest('id')->first( )));
 
 });
 
