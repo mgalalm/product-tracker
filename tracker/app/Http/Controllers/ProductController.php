@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Rules\StockUrlValidation;
 
 use Illuminate\Http\Request;
-use App\Models\ {Product};
+use App\Models\ {Product, User, Retailer};
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
-use App\Models\Retailer;
 use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -20,6 +19,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index(Request $request)
     {
 
@@ -31,8 +31,10 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(User $user)
     {
+        Gate::authorize('create', Product::class);
+
         return inertia('Products/Create', [
             'retailers' => fn() => RetailerResource::collection(Retailer::all()),
         ]);

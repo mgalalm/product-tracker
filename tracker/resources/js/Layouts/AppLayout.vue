@@ -45,7 +45,7 @@ const menu = [
         name: 'Create Product',
         url: route('products.create'),
         route: 'products.create',
-        when: () => usePage().props.auth.user,
+        when: () => usePage().props.permissions.create_products,
     }
 ];
 </script>

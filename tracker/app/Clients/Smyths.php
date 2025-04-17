@@ -11,11 +11,11 @@ class Smyths implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results =  Http::get($this->endpoint($stock))->json();
-        // dd($results);
+        $results =  Http::timeout(60)
+            ->get($this->endpoint($stock), )->json();
 
         // if price is N/A set the value to 0 otherwise parse the price
-        $price = $results['price'] === 'N/A' ? Money::EUR(0) : Money::parse($results['price']);
+        $price = $results['price'] === 'N/A' ? Money::EUR(0) : Money::parseByDecimal($results['price'], 'EUR');
         $in_stock = Str::contains(Str::lower($results['availability']), 'out of stock') === false;
 
         return new StockStatus(
