@@ -25,5 +25,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application's code into the container
 COPY . .
 
-CMD ["uvicorn", "retailer.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "retailer.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-config" , "log_config.yaml"]
 # CMD ["python", "crawler.py"]

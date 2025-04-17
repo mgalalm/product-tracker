@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi import Depends
 from .base_driver import BaseDriver
 from retailer.config import settings
+from logger import logger
 
 class DriverFactory:
     DRIVER_MAPPING = {
@@ -21,13 +22,10 @@ class DriverFactory:
         
 
     def get_driver(self) -> BaseDriver:
-        # driver_mode = self.config["driver_mode"].lower() # default to local 
-        
-        
-        # if driver_mode not in self.DRIVER_MAPPING:
-        #     raise ValueError(f"Unsupported driver mode: {driver_mode}")
 
         driver_info = self.DRIVER_MAPPING[self.mode]
+        
+        logger.info(f"Creating {self.mode} driver for {self.site} with URL: {self.url}")
         
         try:
             module = importlib.import_module(driver_info["module"])

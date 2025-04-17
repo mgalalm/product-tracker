@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
-import logging
+from logger import logger
 from fastapi import Depends
+import re
 
 class ParserService:
   
@@ -9,9 +10,15 @@ class ParserService:
     self.driver = driver
     # page = self.driver.get(self.driver.url)
     page = self.driver.get_content()
-    # save the page source to a file for debugging
-    with open('page.html', 'w') as file:
+    # save the page source to a file pages folder with the url of the site
+    safe_name = re.sub(r'[^a-zA-Z0-9]', '_', self.driver.url) + '.html'
+    logger.info(f"Saving page source to {safe_name}")
+    
+    with open(f'pages/{safe_name}', 'w') as file:
       file.write(page)
+    
+    # with open('page.html', 'w') as file:
+    #   file.write(page)
     self.soup = BeautifulSoup(page, 'html.parser')
 
   def parse(self):
@@ -22,5 +29,20 @@ class ParserService:
 
 
   def get_attribute_value(self, selector):
-    element = self.soup.select_one(selector)    
-    return element.text.strip().rstrip('.') if element else "N/A"
+    
+    logger.info(f"Using selector: {selector}")
+    
+    element = self.soup.select_one(selector)
+    
+    content = None
+    
+    if not element:
+        logger.warning(f"Element not found for selector: {selector}")
+        return "N/A"
+    
+    if element.name == 'meta':
+        content = element.get('content')
+    else:
+        content = element.text.strip().rstrip('.')
+        
+    return content

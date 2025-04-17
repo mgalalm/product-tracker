@@ -53,8 +53,8 @@ class RetailerConfig(BaseSettings):
             "base_url": "https://www.smythstoys.com/ie/en-ie/p/", #p/171375
             "selectors": {
                 "name": "h1",
-                "price": "div.price_tag span",
-                "availability": "p.js-stockStatus"
+                "price": 'meta[property="og:price:amount"]',
+                "availability": 'span:-soup-contains("Out of stock", "Out of Stock", "Out Of Stock")'
             },
             "driver_mode": "remote"
         },
