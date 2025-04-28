@@ -36,7 +36,8 @@ class DriverFactory:
                 raise TypeError(f"{driver_info['class_name']} does not implement BaseDriver")
 
             return instance
-        except (ImportError, AttributeError, TypeError) as e:
+        except Exception as e:
+            logger.error(f"Error loading driver {driver_info['class_name']}: {e}")
             raise ImportError(f"Error loading driver: {e}")
 
 def get_driver_factory(site: str, pid: str):

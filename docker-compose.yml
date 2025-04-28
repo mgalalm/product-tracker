@@ -4,10 +4,12 @@ services:
     build:
       context: ./crawler
       dockerfile: Dockerfile
+    container_name: crawler-container
     ports:
       - "8001:8000"
     volumes:
       - ./crawler:/app
+      - ./certs/brightdata_proxy_33335.crt:/etc/ssl/certs/mycert.crt
     env_file:
       - crawler/.env
     environment:

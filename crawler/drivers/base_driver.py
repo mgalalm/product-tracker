@@ -13,15 +13,15 @@ class BaseDriver(ABC):
         self.selectors = selectors
 
     @abstractmethod
-    def get_content(self):
+    async def get_content(self):
         """Retrieve content from the given URL."""
         pass
     
     def get_name(self):
         return self.__class__.__name__
     
-    def parse(self):
-        return ParserService(self, self.selectors).parse()
+    async def parse(self):
+        return await ParserService(self, self.selectors).parse()
     
     @abstractmethod
     def close(self):

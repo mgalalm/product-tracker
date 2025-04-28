@@ -6,35 +6,62 @@ import sys
 import urllib.request
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from retailer.config import settings
-import logging
+from logger import logger
+import httpx
+import certifi
+
+import os
+
+# os.environ["SSL_CERT_FILE"] = ""
+
+# ssl._create_default_https_context = ssl._create_unverified_context
+
 
 class BrightDataDriver(BaseDriver):
+    
     def __init__(self, url, selectors):
       super().__init__(url, selectors)
-      self.logger = logging.getLogger('uvicorn.error')
+     
+      logger.info(f"Initializing {self.__class__.__name__} driver for {url}")
       self.proxy_url = settings.bd_proxy_url
-      self.logger.info(self.proxy_url)
-      ssl._create_default_https_context = ssl._create_unverified_context
+      
+      logger.info(f"Using proxy: {self.proxy_url}")
+      
+      # For async usage with error handling
+      try:
+         
+          proxy_mounts = {
+          "http://": httpx.AsyncHTTPTransport(proxy=self.proxy_url),
+          "https://": httpx.AsyncHTTPTransport(proxy=self.proxy_url)
+          }
+          
+          self.client = httpx.AsyncClient(
+                mounts=proxy_mounts,
+                
+                verify=False # disables SSL verification
+                )
+          logger.info(f"HTTP client initialized with proxy: {self.proxy_url}")
+      except Exception as e:
+          logger.error(f"Error initializing HTTP client: {e}")
+          raise
+      
+      # self.client = httpx.AsyncClient(proxies=self.proxy_url, ver
+      
 
-      if sys.version_info[0] == 2:
-        from six.moves.urllib import request
-        self.driver = request.build_opener(
-          request.ProxyHandler({
-            'http': self.proxy_url,
-            'https': self.proxy_url
-          })
-        )
-      else:
-         self.driver = urllib.request.build_opener(
-          urllib.request.ProxyHandler({
-            'http':  self.proxy_url,
-            'https':  self.proxy_url
-          })
-        )
 
-    def get_content(self):  
-        return self.driver.open(self.url).read().decode('utf-8')
+    async def get_content(self):
+        try:
+            page = await self.client.get(self.url, timeout=40)
+      
+            logger.info(f"Page content fetched successfully")
+            return page.text
+      
+        except Exception as e:
+          logger.error(f"Error fetching content from {self.url}: {e}")
+          await self.client.aclose()
+          raise
 
-    def close(self):
-      pass
+    async def close(self):
+      # pass
+      await self.client.aclose()
     

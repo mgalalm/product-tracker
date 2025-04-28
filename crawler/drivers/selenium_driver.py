@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from drivers.base_driver import BaseDriver
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+import asyncio
 
 class SeleniumDriver(BaseDriver):
     def __init__(self, url, selectors):
@@ -18,9 +19,10 @@ class SeleniumDriver(BaseDriver):
         return webdriver.Chrome(options=chrome_options)
         # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-    def get_content(self):
+    async def get_content(self):
         try: 
-            self.driver.get(self.url)
+            # self.driver.get(self.url)
+            await asyncio.to_thread(self.driver.get, self.url)
         except Exception as e:
             print(f"Error accessing URL: {str(e)}")
             self.driver.quit()

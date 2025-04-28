@@ -58,6 +58,15 @@ class RetailerConfig(BaseSettings):
             },
             "driver_mode": "remote"
         },
+        "airback" : {
+            "base_url": "https://airback.store/products/airback?variant=",
+            "selectors": {
+                "name": "title",
+                "price": 'meta[property="product:price:amount"]',
+                "availability": 'meta[property="product:availability"]'
+            },
+            "driver_mode": "local"
+        }
     }
     
     bd_proxy_url: str

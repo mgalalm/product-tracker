@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Stock;
 use App\Events\{NowInStock,ProductTracked, PriceDropped};
-use App\Jobs\Middleware\RateLimited;
+
 
 class TrackProduct implements ShouldQueue
 {
