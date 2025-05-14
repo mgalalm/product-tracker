@@ -9,13 +9,7 @@ from retailer.config import settings
 from logger import logger
 import httpx
 import certifi
-
 import os
-
-# os.environ["SSL_CERT_FILE"] = ""
-
-# ssl._create_default_https_context = ssl._create_unverified_context
-
 
 class BrightDataDriver(BaseDriver):
     
@@ -45,10 +39,6 @@ class BrightDataDriver(BaseDriver):
           logger.error(f"Error initializing HTTP client: {e}")
           raise
       
-      # self.client = httpx.AsyncClient(proxies=self.proxy_url, ver
-      
-
-
     async def get_content(self):
         try:
             page = await self.client.get(self.url, timeout=40)

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Cknow\Money\Money;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -71,5 +72,8 @@ class Product extends Model
         return $minMoney->format() . ' - ' . $maxMoney->format();
     }
 
-
+    public function showRoute(array $params = []): string
+    {
+        return route('products.show', [$this, Str::slug($this->name), ...$params]);
+    }
 }

@@ -29,5 +29,11 @@ Route::middleware([
     Route::resource('products.stocks', StockController::class);
 
     // show with a slug
-    Route::get('products/{product}/{slug?}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('products/{product}/{slug}', [ProductController::class, 'show'])->name('products.show');
+});
+
+
+Route::get('/test', function () {
+    phpinfo();
+    return 'test';
 });

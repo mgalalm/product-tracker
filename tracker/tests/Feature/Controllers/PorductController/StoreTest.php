@@ -122,7 +122,9 @@ it('redirects to the product show page', function () {
             ]
         ]
 
-    ])->assertRedirect(route('products.show', Product::latest('id')->first( )));
+    ])->assertRedirect(Product::latest('id')->first( )->showRoute())
+        ->assertSessionHasNoErrors()
+        ->assertSessionHas('flash.banner', 'Product This is a product has been created successfully.');
 
 });
 

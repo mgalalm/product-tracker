@@ -21,7 +21,7 @@ defineProps({
         <Container>
             <ul class="divide-y divide-gray-200">
                 <li v-for="product in products.data" :key="product.id" class="px-2 py-4">
-                    <Link :href="route('products.show', product.id)">
+                    <Link :href="product.routes.show">
                         <span class="font-bold text-lg">{{ product.name }}</span>
                     </Link>
                 </li>

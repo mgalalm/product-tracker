@@ -41,7 +41,7 @@ it('can detach a stock and attach new one ', function () {
         'retailer' => $retailer->id,
         'url' => 'https://www.example.com/products/123',
 
-    ])->assertRedirect(route('products.show', $product));
+    ])->assertRedirect($product->showRoute());
 
     // assert that the product has no longer the stock
     $this->assertDatabaseMissing('product_stock', [

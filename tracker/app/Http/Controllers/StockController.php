@@ -85,7 +85,7 @@ class StockController extends Controller
             ]
         );
 
-        return to_route('products.show', $product->id)
+        return redirect($product->showRoute())
             ->banner("Stock has been updated successfully.");
     }
 
@@ -97,7 +97,7 @@ class StockController extends Controller
         Gate::authorize('delete', [$stock, $product]);
 
         $product->stocks()->detach($stock);
-        return to_route('products.show', $product->id)
+        return redirect($product->showRoute())
             ->banner("Stock has been deleted successfully.");
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Gate;
+use Str;
 
 
 class ProductController extends Controller
@@ -72,16 +73,20 @@ class ProductController extends Controller
             );
         });
 
-        return to_route('products.show', $product)
+        return redirect($product->showRoute())
             ->banner("Product {$product->name} has been created successfully.");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
         Gate::authorize('view', $product);
+
+        if (!Str::contains($product->showRoute(), $request->path())) {
+            return redirect($product->showRoute($request->query()), 301);
+        }
 
         $product->load('stocks');
 

@@ -13,8 +13,14 @@ class Dunnes implements Client
     {
         $results =  Http::get($this->endpoint($stock))->json();
 
+        // if name contains "unavailable" or "missing" return false
+        if (Str::contains(Str::lower($results['name']), 'unavailable') || Str::contains(Str::lower($results['name']), 'missing')) {
+            return new StockStatus(false, Money::EUR(0));
+        }
+
         $price = Money::parse($results['price']);
         $in_stock = Str::lower($results['availability']) !== Str::lower('out of stock');
+
 
         return new StockStatus(
             $in_stock,

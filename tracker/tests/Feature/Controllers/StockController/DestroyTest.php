@@ -14,7 +14,7 @@ it('can detach a stock', function () {
     $product = $stock->products->first();
 
     actingAs($product->user)->delete(route('products.stocks.destroy', [$product, $stock])
-        )->assertRedirect(route('products.show', $product));
+        )->assertRedirect($product->showRoute());
 
     // the stock detached from the product
     $this->assertDatabaseMissing('product_stock', [
@@ -45,7 +45,7 @@ it('detach the stock from a given product and hold on the relationship for other
     $anotherProduct->refresh();
 
     actingAs($product->user)->delete(route('products.stocks.destroy', [$anotherProduct, $stock])
-        )->assertRedirect(route('products.show', $anotherProduct));
+        )->assertRedirect($anotherProduct->showRoute());
 
     // the stock detached from the product
     $this->assertDatabaseMissing('product_stock', [

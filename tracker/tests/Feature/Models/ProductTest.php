@@ -46,3 +46,23 @@ it('gets product price range with one stock', function () {
 
     $this->assertEquals('€20.00', $product->price_range);
 });
+
+// it can generates a route to the show page
+it('can generates a route to the show page', function () {
+    $product = Product::factory()->create([
+        'name' => 'Test Product',
+    ]);
+
+    expect($product->showRoute())->toBe(route('products.show', [$product, Str::slug($product->name)]));
+});
+
+// it can generates a route to the show page with query string
+it('can generates a route to the show page with query string', function () {
+    $product = Product::factory()->create([
+        'name' => 'Test Product',
+    ]);
+
+    expect($product->showRoute(['foo' => 'bar']))->toBe(route('products.show', [$product, Str::slug($product->name), 'foo' => 'bar']));
+});
+
+

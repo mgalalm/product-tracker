@@ -20,6 +20,9 @@ class ProductResource extends JsonResource
             'stocks' => $this->whenLoaded('stocks', fn() => StockResource::collection($this->stocks)),
             'created_at' => $this->created_at,
             'price_range' => $this->price_range,
+            'routes' => [
+                'show' => $this->showRoute(),
+            ]
         ];
     }
 }
