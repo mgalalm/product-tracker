@@ -12,6 +12,15 @@ class RetailerConfig(BaseSettings):
             },
             "driver_mode": "remote"
         },
+        "amazon-ie": {
+            "base_url": "https://www.amazon.ie/dp/",
+            "selectors": {
+                "name": "span#productTitle",
+                "price": "span.a-offscreen",
+                "availability": "div#availability span"
+            },
+            "driver_mode": "remote"
+        },
         "currys": {
             "base_url": "https://www.currys.ie/products/",
             "selectors": {
