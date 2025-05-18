@@ -24,6 +24,7 @@ it('should return the correct component', function () {
 it('passes the products to the view', function () {
     $this->seed(RetailerWithProductSeeder::class);
     $products = Product::all();
+    $products->load(['type']);
     actingAs($products->first()->user)->get(route('products.index'))
         ->assertHasPaginatedResource('products', ProductResource::collection($products->reverse()));
 });

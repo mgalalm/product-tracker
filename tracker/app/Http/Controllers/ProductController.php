@@ -25,7 +25,7 @@ class ProductController extends Controller
     {
 
         return inertia('Products/Index', [
-            'products' => ProductResource::collection($request->user()->products()->latest()->latest('id')->paginate()),
+            'products' => ProductResource::collection($request->user()->products()->select('id', 'name', 'created_at', 'type_id')->with('type')->latest()->latest('id')->paginate()),
         ]);
     }
 

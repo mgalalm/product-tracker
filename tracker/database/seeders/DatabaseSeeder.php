@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\{Product, Retailer, Stock};
+use App\Models\{Product, Retailer, Type};
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        $this->call([
+            TypeSeeder::class,
+        ]);
+
+        $types = Type::all();
+
         $admin = User::factory()->create([
             'name' => 'John Doe',
             // get the email from the .env file if it exists, otherwise use the default value
@@ -25,6 +31,7 @@ class DatabaseSeeder extends Seeder
         Product::factory()->create([
             'name' => 'Amazon Show 15',
             'user_id' => $admin->id,
+            'type_id' => $types->where('slug', 'digital-product')->first()->id,
         ])->stocks()->create([
                     'retailer_id' => Retailer::factory()->create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk'])->id,
                     'price' => 2000,
@@ -36,6 +43,7 @@ class DatabaseSeeder extends Seeder
         Product::factory()->create([
             'name' => 'LOGIK LSD55W23 50/50 Fridge Freezer - White',
             'user_id' => $admin->id,
+            'type_id' =>  $types->where('slug', 'subscription')->first()->id,
         ])->stocks()->create(
                 [
                     'retailer_id' => Retailer::factory()->create(['name' => 'Currys', 'domain' => 'currys.ie'])->id,
@@ -51,6 +59,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => "L'OR Classique Instant Coffee 150g",
                 'user_id' => $admin->id,
+                'type_id' => $types->where('slug', 'product')->first()->id,
             ]
         )->stocks()->createMany(
                 [
@@ -76,6 +85,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => "BMW Police Motorcycle 12V Electric Ride On",
                 'user_id' => $admin->id,
+                'type_id' => $types->where('slug', 'product')->first()->id,
             ]
         )->stocks()->create(
                 [

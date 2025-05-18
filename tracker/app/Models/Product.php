@@ -39,6 +39,12 @@ class Product extends Model
         return $this->hasMany(History::class);
     }
 
+    // type
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

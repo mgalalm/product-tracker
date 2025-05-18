@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{Product, Retailer, Stock, User};
+use App\Models\{Product, Retailer, Stock, User, Type};
+use Database\Seeders\TypeSeeder;
 
 class RetailerWithProductSeeder extends Seeder
 {
@@ -12,9 +13,13 @@ class RetailerWithProductSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(TypeSeeder::class);
+
+        $types = Type::all();
+
         $user = User::factory()->create(['email' => 'mgalal@example.com']);
 
-        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id]);
+        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id, 'type_id' => $types->where('slug', 'product')->first()->id]);
 
         $amazon_uk = Retailer::create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']);
 

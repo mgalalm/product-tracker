@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Type;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -19,6 +20,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' =>  str(fake()->sentence)->beforeLast('.'),
+            'type_id' => Type::factory(),
             'user_id' => User::factory()
         ];
     }
