@@ -7,7 +7,7 @@ import { computed } from "vue";
 import { formatDistance, parseISO } from "date-fns";
 import Pagination from "@/Components/Pagination.vue";
 import { relativeDate, fullMonth } from "@/Utilities/date.js";
-import Heading from "@/Components/Heading.vue";
+import Heading from "@/Components/PageHeading.vue";
 // import router from "@/router";
 import { defineProps, ref } from "vue";
 import { visitModal } from "@inertiaui/modal-vue";

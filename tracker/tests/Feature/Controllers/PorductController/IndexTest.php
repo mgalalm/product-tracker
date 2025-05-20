@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\TypeResource;
 use function Pest\Laravel\get;
 use Database\Seeders\RetailerWithProductSeeder;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Type;
 
 use function Pest\Laravel\actingAs;
 
@@ -24,9 +26,25 @@ it('should return the correct component', function () {
 it('passes the products to the view', function () {
     $this->seed(RetailerWithProductSeeder::class);
     $products = Product::all();
-    $products->load(['type']);
+    $products->load(['type:id,name,slug']);
     actingAs($products->first()->user)->get(route('products.index'))
         ->assertHasPaginatedResource('products', ProductResource::collection($products->reverse()));
+});
+
+
+it('can filter to a type', function () {
+
+    $user = User::factory()->create();
+    $general = Type::factory()->create();
+
+    $products = Product::factory(2)->create([
+        'type_id' => $general->id,
+        'user_id' => $user->id,
+    ]);
+
+    $products->load(['user', 'type:id,name,slug']);
+    actingAs($user)->get(route('products.index', ['type' => $general]))
+        ->assertHasPaginatedResource('products', ProductResource::collection($products->reverse()) );
 });
 
 // new user can't access the products index if he has no products
@@ -35,6 +53,16 @@ it('new user can\'t access the products index if he has no products', function (
     $user = User::factory()->create();
     actingAs($user)->get(route('products.index'))
         ->assertHasPaginatedResource('products', ProductResource::collection([]));;
+});
+
+
+// passes the selected type to the view
+it('passes the selected type to the view', function () {
+
+    $user = User::factory()->create();
+    $general = Type::factory()->create();
+    actingAs($user)->get(route('products.index', ['type' => $general]))
+        ->assertHasResource('selectedType', TypeResource::make($general));
 });
 
 

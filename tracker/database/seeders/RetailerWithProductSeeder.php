@@ -19,7 +19,7 @@ class RetailerWithProductSeeder extends Seeder
 
         $user = User::factory()->create(['email' => 'mgalal@example.com']);
 
-        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id, 'type_id' => $types->where('slug', 'product')->first()->id]);
+        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id, 'type_id' => $types->where('slug', 'general')->first()->id]);
 
         $amazon_uk = Retailer::create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']);
 

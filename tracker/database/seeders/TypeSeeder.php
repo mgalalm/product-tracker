@@ -14,8 +14,8 @@ class TypeSeeder extends Seeder
     {
         $data = [
             [
-                'slug' => 'product',
-                'name' => 'Product',
+                'slug' => 'general',
+                'name' => 'General',
                 'description' => 'A product is a tangible item that is manufactured or produced for sale.'
             ],
             [

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TypeResource;
 use App\Rules\StockUrlValidation;
 
 use Illuminate\Http\Request;
-use App\Models\ {Product, User, Retailer};
+use App\Models\ {Product, User, Retailer, Type};
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
 use App\Http\Resources\RetailerResource;
@@ -21,16 +22,20 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index(Request $request)
+    public function index(Request $request, Type $type = null)
     {
+        // Gate::
+        $products = $request->user()->products()
+        ->select('id', 'name', 'created_at', 'type_id')
+        ->with('type:id,name,slug' )
+        ->when($type, fn($query) => $query->where('type_id', $type->id))
+        // ->latest()
+        ->latest('id')
+        ->paginate();
 
         return inertia('Products/Index', [
-            'products' => ProductResource::collection($request->user()->products()
-                ->select('id', 'name', 'created_at', 'type_id')
-                ->with('type:id,name' )
-                ->latest()
-                ->latest('id')
-                ->paginate()),
+            'products' => ProductResource::collection($products),
+            'selectedType' => fn() => $type ? TypeResource::make($type) : null, //only load products when Moving through pagination rather than also loading the selected topic data
         ]);
     }
 

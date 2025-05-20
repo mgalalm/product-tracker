@@ -9,4 +9,9 @@ class Type extends Model
 {
     /** @use HasFactory<\Database\Factories\TypeFactory> */
     use HasFactory;
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

@@ -27,9 +27,11 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('products', ProductController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('products', ProductController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('products.stocks', StockController::class);
 
+    // index only
+    Route::get('products/{type?}', [ProductController::class, 'index'])->name('products.index');
     // show with a slug
     Route::get('products/{product}/{slug}', [ProductController::class, 'show'])->name('products.show');
 });

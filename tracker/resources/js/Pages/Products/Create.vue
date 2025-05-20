@@ -1,6 +1,7 @@
 <template>
     <AppLayout>
         <Container>
+            <heading title="Create Product"></heading>
             <form @submit.prevent="addProduct">
                 <div class="space-y-4">
                     <div class="border-b border-gray-900/10 pb-8">
@@ -73,6 +74,7 @@ import GroupInput from "@/Components/GroupInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CancelButton from "@/Components/CancelButton.vue";
 import InputError from "@/Components/InputError.vue";
+import Heading from "@/Components/PageHeading.vue";
 
 const productForm = useForm({
     name: "",
