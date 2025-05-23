@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
 
         $amazon_uk= Retailer::factory()->create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']);
         $amazon_ie = Retailer::factory()->create(['name' => 'Amazon IE', 'domain' => 'amazon.ie']);
-        $currys = Retailer::factory()->create(['name' => 'Currys IE', 'domain' => 'currys.ie']);
-        $dunnes = Retailer::factory()->create(['name' => 'Dunnes Stores Grocery', 'domain' => 'dunnesstoresgrocery.com']);
-        $tesco = Retailer::factory()->create(['name' => 'Tesco IE', 'domain' => 'tesco.ie']);
-        $smyth = Retailer::factory()->create(['name' => 'Smyths Toys', 'domain' => 'smythstoys.com']);
+        $currys = Retailer::factory()->create(['name' => 'Currys', 'domain' => 'currys.ie']);
+        $dunnes = Retailer::factory()->create(['name' => 'Dunnes', 'domain' => 'dunnesstoresgrocery.com']);
+        $tesco = Retailer::factory()->create(['name' => 'Tesco', 'domain' => 'tesco.ie']);
+        $smyth = Retailer::factory()->create(['name' => 'Smyths', 'domain' => 'smythstoys.com']);
 
 
         Product::factory()->create([
