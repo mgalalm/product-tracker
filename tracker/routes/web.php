@@ -41,3 +41,4 @@ Route::get('/test', function () {
     phpinfo();
     return 'test';
 });
+

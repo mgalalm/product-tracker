@@ -44,7 +44,7 @@ class RetailerConfig(BaseSettings):
             "base_url": "https://www.tesco.ie/groceries/en-IE/products/",
             "selectors": {
                 "name": "h1",
-                "price": "p[class*='styled__PriceText']",
+                "price": "p[class*='priceText']",
                 "availability": 'span:contains("out of stock")'
             },
             "driver_mode": "remote"

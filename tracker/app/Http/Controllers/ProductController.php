@@ -24,17 +24,23 @@ class ProductController extends Controller
 
     public function index(Request $request, Type $type = null)
     {
-        // Gate::
+        Gate::authorize('viewAny', Product::class);
+
         $products = $request->user()->products()
         ->select('id', 'name', 'created_at', 'type_id')
         ->with('type:id,name,slug' )
         ->when($type, fn($query) => $query->where('type_id', $type->id))
-        // ->latest()
         ->latest('id')
         ->paginate();
 
+        $productResources = ProductResource::collection($products);
+
+        if ($request->wantsJson()) {
+            return $productResources;
+        }
+
         return inertia('Products/Index', [
-            'products' => ProductResource::collection($products),
+            'products' => $productResources,
             'selectedType' => fn() => $type ? TypeResource::make($type) : null, //only load products when Moving through pagination rather than also loading the selected topic data
         ]);
     }
@@ -99,6 +105,10 @@ class ProductController extends Controller
         }
 
         $product->load('stocks');
+
+        if ($request->wantsJson()) {
+            return ProductResource::make($product);
+        }
 
         return inertia('Products/Show', [
             'product' => fn() => ProductResource::make($product),

@@ -13,7 +13,8 @@ class ProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        // Basic check - only authenticated users can view their resources
+        return true;
     }
 
     /**
