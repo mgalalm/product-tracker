@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $dunnes = Retailer::factory()->create(['name' => 'Dunnes', 'domain' => 'dunnesstoresgrocery.com']);
         $tesco = Retailer::factory()->create(['name' => 'Tesco', 'domain' => 'tesco.ie']);
         $smyth = Retailer::factory()->create(['name' => 'Smyths', 'domain' => 'smythstoys.com']);
+        $supervalu = Retailer::factory()->create(['name' => 'Supervalu', 'domain' => 'shop.supervalu.ie']);
 
 
         Product::factory()->create([
@@ -83,7 +84,13 @@ class DatabaseSeeder extends Seeder
                         'price' => 1149,
                         'url' => 'https://www.tesco.ie/groceries/en-IE/products/312095473',
                         'sku' => '312095473',
-                    ]
+                    ],
+                    [
+                        'retailer_id' => $supervalu->id,
+                        'price' => 12.70,
+                        'url' => "https://shop.supervalu.ie/sm/delivery/rsid/5551/product/1832340000",
+                        'sku' => '1832340000',
+                    ],
                 ]
 
             );

@@ -75,6 +75,15 @@ class RetailerConfig(BaseSettings):
                 "availability": 'meta[property="product:availability"]'
             },
             "driver_mode": "local"
+        },  
+        "supervalu": {
+            "base_url": "https://shop.supervalu.ie/product/",
+            "selectors": {
+                "name": "title",
+                "price": 'meta[itemprop="price"]',
+                "availability": 'span:-soup-contains("Out of stock", "Out of Stock", "Out Of Stock")'
+            },
+            "driver_mode": "local"
         }
     }
     
