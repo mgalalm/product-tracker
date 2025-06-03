@@ -6,10 +6,15 @@ import { defineProps } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { relativeDate } from "@/Utilities/date.js";
 import PageHeading from "@/Components/PageHeading.vue";
+import Pill from '@/Components/Pill.vue';
 
 
 defineProps({
     products: {
+        type: Array,
+        required: true
+    },
+    types: {
         type: Array,
         required: true
     },
@@ -27,12 +32,21 @@ const formattedDate = (product) => relativeDate(product.created_at);
 <AppLayout>
 
         <Container>
-
-            <Link v-if="selectedType" :href="route('products.index')" class="inline-flex items-center text-sm text-gray-500 hover:text-indigo-600">
-                &larr; Back to all products
-            </Link>
-
             <PageHeading :title="selectedType? selectedType.name : 'All products'"></PageHeading>
+            <menu class="flex space-x-1 mt-3 whitespace-nowrap overflow-x-auto pb-2 pt-1">
+                <li>
+                    <Pill :href="route('products.index')" :filled="!selectedType">
+                        All
+                    </Pill>
+                </li>
+                <li v-for="type in types" :key="type.id">
+                        <Pill :href="route('products.index', {type: type.slug})" :filled="selectedType && selectedType.id === type.id">
+                            {{ type.name }}
+                        </Pill>
+                    </li>
+
+            </menu>
+
 
             <ul class="divide-y divide-gray-200 mt-4">
                 <li v-for="product in products.data" :key="product.id" class="flex flex-col items-baseline justify-between md:flex-row">
@@ -43,9 +57,9 @@ const formattedDate = (product) => relativeDate(product.created_at);
                             >{{ formattedDate(product) }}
                         </span>
                     </Link>
-                    <Link :href="route('products.index', {type: product.type.slug}) " class="mb-2 rounded-full border border-pink-500 px-2 py-0.5 text-pink-500 hover:bg-indigo-500 hover:text-indigo-50">
-                        {{ product.type.name}}
-                    </Link>
+                    <Pill :href="route('products.index', {type: product.type.slug})">
+                        {{ product.type.name }}
+                    </Pill>
                 </li>
             </ul>
             <Pagination :meta="products.meta" :only="['products', 'selectedType']"/>

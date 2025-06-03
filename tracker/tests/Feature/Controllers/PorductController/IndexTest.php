@@ -25,9 +25,12 @@ it('should return the correct component', function () {
 
 it('passes the products to the view', function () {
     $this->seed(RetailerWithProductSeeder::class);
+
     $products = Product::all();
+
     $products->load(['type:id,name,slug']);
-    actingAs($products->first()->user)->get(route('products.index'))
+
+    actingAs(RetailerWithProductSeeder::$user)->get(route('products.index'))
         ->assertHasPaginatedResource('products', ProductResource::collection($products->reverse()));
 });
 
@@ -66,3 +69,13 @@ it('passes the selected type to the view', function () {
 });
 
 
+it('passes types to the view', function () {
+    $this->seed(RetailerWithProductSeeder::class);
+
+    $user = RetailerWithProductSeeder::$user;
+
+    $types =Type::all();
+    // $types = Type::factory(2)->create();
+    actingAs($user)->get(route('products.index'))
+        ->assertHasResource('types', TypeResource::collection($types));
+});

@@ -11,15 +11,18 @@ class RetailerWithProductSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+
+    public static User $user;
+
     public function run(): void
     {
         $this->call(TypeSeeder::class);
 
         $types = Type::all();
 
-        $user = User::factory()->create(['email' => 'mgalal@example.com']);
+        self::$user = User::factory()->create(['email' => 'mgalal@example.com']);
 
-        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id, 'type_id' => $types->where('slug', 'general')->first()->id]);
+        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => self::$user->id, 'type_id' => $types->where('slug', 'general')->first()->id]);
 
         $amazon_uk = Retailer::create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']);
 

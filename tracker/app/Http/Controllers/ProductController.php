@@ -41,6 +41,7 @@ class ProductController extends Controller
 
         return inertia('Products/Index', [
             'products' => $productResources,
+            'types' => fn() => TypeResource::collection(Type::all()),
             'selectedType' => fn() => $type ? TypeResource::make($type) : null, //only load products when Moving through pagination rather than also loading the selected topic data
         ]);
     }
