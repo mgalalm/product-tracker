@@ -11,7 +11,7 @@ import Pill from '@/Components/Pill.vue';
 
 defineProps({
     products: {
-        type: Array,
+        type: Object,
         required: true
     },
     types: {

@@ -1,8 +1,8 @@
 <template>
   <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
     <div class="flex flex-1 justify-between sm:hidden">
-      <Link :href="previousUrl" :only="only" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous1</Link>
-      <Link :href="nextUrl" :only="only"  class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</Link>
+      <Link :href="previousUrl ?? '#'" :only="only" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous1</Link>
+      <Link :href="nextUrl ?? '#'" :only="only"  class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</Link>
     </div>
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div>
@@ -24,7 +24,8 @@
       </div>
       <div>
         <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm bg-white" aria-label="Pagination">
-          <Link v-for="link in meta.links" :href="link.url"
+
+            <Link v-for="link in meta.links" :href="link.url ?? '#'"
              class="relative inline-flex items-center first-of-type:rounded-l-md last-of-type:rounded-r-md px-3 py-2"
              :class="{
                            'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': link.active,
