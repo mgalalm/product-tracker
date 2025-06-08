@@ -6,14 +6,14 @@ use App\Http\Resources\TypeResource;
 use App\Rules\StockUrlValidation;
 
 use Illuminate\Http\Request;
-use App\Models\ {Product, User, Retailer, Type};
+use App\Models\{Product, User, Retailer, Type};
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StockResource;
 use App\Http\Resources\RetailerResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Gate;
-use Str;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 
 class ProductController extends Controller
@@ -27,11 +27,11 @@ class ProductController extends Controller
         Gate::authorize('viewAny', Product::class);
 
         $products = $request->user()->products()
-        ->select('id', 'name', 'created_at', 'type_id')
-        ->with('type:id,name,slug' )
-        ->when($type, fn($query) => $query->where('type_id', $type->id))
-        ->latest('id')
-        ->paginate();
+            ->select('id', 'name', 'created_at', 'type_id')
+            ->with('type:id,name,slug')
+            ->when($type, fn($query) => $query->where('type_id', $type->id))
+            ->latest('id')
+            ->paginate();
 
         $productResources = ProductResource::collection($products);
 
@@ -55,6 +55,7 @@ class ProductController extends Controller
 
         return inertia('Products/Create', [
             'retailers' => fn() => RetailerResource::collection(Retailer::all()),
+            'types' => fn() => TypeResource::collection(Type::all()),
         ]);
     }
 
@@ -64,18 +65,17 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'type_id' => ['required', 'bail', 'exists:types,id'],
             'stocks' => ['required', 'array'],
-
-            'stocks.*.retailer' => ['bail', 'required',
-                'required',
-                Rule::exists('retailers', 'id')],
+            'stocks.*.retailer' => ['bail', 'required', Rule::exists('retailers', 'id')],
             'stocks.*.url' => ['required', 'url', new StockUrlValidation],
             'stocks.*.sku' => ['sometimes', 'required'],
         ]);
 
         $product = $request->user()->products()->create([
             'name' => $data['name'],
+            'type_id' => $data['type_id'],
         ]);
 
         collect($data['stocks'])->each(function ($stock) use ($product) {
@@ -105,7 +105,7 @@ class ProductController extends Controller
             return redirect($product->showRoute($request->query()), 301);
         }
 
-        $product->load('stocks');
+        $product->load('stocks', 'type');
 
         if ($request->wantsJson()) {
             return ProductResource::make($product);
@@ -113,7 +113,9 @@ class ProductController extends Controller
 
         return inertia('Products/Show', [
             'product' => fn() => ProductResource::make($product),
+            'type' => fn() => TypeResource::make($product->type),
             'stocks' => fn() => StockResource::collection($product->stocks()->with('retailer')->latest('updated_at')->paginate()),
+
         ]);
     }
 

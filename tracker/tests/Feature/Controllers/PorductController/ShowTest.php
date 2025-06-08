@@ -22,7 +22,7 @@ it('passes the product to the view', function () {
     $product = Product::first();
 
     // load the stocks relationship
-    $product->load('stocks');
+    $product->load('stocks', 'type');
 
     actingAs($product->user)->get($product->showRoute())
         ->assertHasResource('product', ProductResource::make($product));

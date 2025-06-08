@@ -6,6 +6,7 @@ use App\Models\Product;
 use function Pest\Laravel\actingAs;
 use Illuminate\Support\Facades\Notification;
 use function Pest\Laravel\post;
+use App\Models\Type;
 
 it('requires authentication', function () {
     post(route('products.store'))->assertRedirect(route('login'));
@@ -16,6 +17,9 @@ it('can store a product', function () {
     $user = User::factory()->create();
     mockClientRequest(pattern: '/(?:products)\/.*-(\d+)(?=\.html)/');
 
+    $type = Type::factory()->create();
+
+
     // // create a retailer for this client class
     $retailer = Retailer::factory()->create([
         'name' => 'Test',
@@ -24,6 +28,7 @@ it('can store a product', function () {
 
     actingAs($user)->post(route('products.store'), [
         'name' => 'This is a product',
+        'type_id' => $type->getKey(),
         'stocks' => [
             [
                 'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
@@ -63,7 +68,9 @@ it('can store a product', function () {
 
 it('avoid storing the same stock twice', function() {
     $user = User::factory()->create();
+    $type_id = Type::factory()->create()->getKey();
 
+    // dd($type_id);
     mockClientRequest(pattern: '/(?:products)\/.*-(\d+)(?=\.html)/');
 
     $retailer = Retailer::factory()->create([
@@ -74,6 +81,7 @@ it('avoid storing the same stock twice', function() {
     $stock_url = 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html';
     actingAs($user)->post(route('products.store'), [
         'name' => 'This is a product',
+        'type_id' => $type_id,
         'stocks' => [
             [
                 'url' => $stock_url,
@@ -115,6 +123,7 @@ it('redirects to the product show page', function () {
 
     actingAs($user)->post(route('products.store'), [
         'name' => 'This is a product',
+        'type_id' => Type::factory()->create()->getKey(),
         'stocks' => [
             [
                 'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
@@ -122,7 +131,7 @@ it('redirects to the product show page', function () {
             ]
         ]
 
-    ])->assertRedirect(Product::latest('id')->first( )->showRoute())
+    ])->assertRedirect(Product::latest('id')->first( )?->showRoute())
         ->assertSessionHasNoErrors()
         ->assertSessionHas('flash.banner', 'Product This is a product has been created successfully.');
 
@@ -143,7 +152,30 @@ it('require a valid product name', function ($value) {
             'boolean' => true,
         ]);
 
+it ('require a valid type', function ($value) {
+    $user = User::factory()->create();
 
+    mockClientRequest();
+
+    actingAs($user)->post(route('products.store'), [
+        'name' => 'This is a product',
+        'type_id' => $value,
+        'stocks' => [
+            [
+                'url' => 'https://example.com/products/apple-airpods-pro-2nd-generation-with-magsafe-charging-case-usbc-white-10255167.html',
+                'retailer' => Retailer::factory()->create()->id,
+            ]
+        ],
+
+    ])->assertInvalid('type_id');
+
+})->with([
+            'null' => null,
+            'empty' => '',
+            'whitespace' => ' ',
+            'not exists' => 100,
+            'boolean' => true,
+        ]);
 it('require a valid retailer', function ($value) {
     $user = User::factory()->create();
 

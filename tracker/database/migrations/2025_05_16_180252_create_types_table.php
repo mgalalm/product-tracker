@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('type_id')->after('user_id')->nullable()->constrained('types')->restrictOnDelete();
+        Schema::table('products', function (Blueprint $table): void {
+            $table->foreignId('type_id')->after('user_id')->constrained('types')->restrictOnDelete();
         });
     }
 

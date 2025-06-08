@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name' , 'type_id'];
     public function inStock()
     {
         return $this->stocks()->where('in_stock', true)->exists();
@@ -82,4 +82,5 @@ class Product extends Model
     {
         return route('products.show', [$this, Str::slug($this->name), ...$params]);
     }
+
 }
