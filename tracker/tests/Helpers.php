@@ -3,12 +3,9 @@
 use App\Clients\StockStatus;
 use Facades\App\Clients\ClientFactory;
 use Cknow\Money\Money;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Inertia\Testing\AssertableInertia;
 use Illuminate\Testing\TestResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-
-
+use Illuminate\Http\Resources\Json\{JsonResource, ResourceCollection};
 function mockClientRequest($available = true, $price = '1000', $pattern = '/(.*)/')
 {
     ClientFactory::shouldReceive('make->checkAvailability')
@@ -20,7 +17,6 @@ function mockClientRequest($available = true, $price = '1000', $pattern = '/(.*)
         ]);
     ClientFactory::shouldReceive('make->endpoint')
         ->andReturn('http://example.com');
-
 }
 
 AssertableInertia::macro('hasResource', function (string $key, JsonResource $resource) {

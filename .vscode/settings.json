@@ -1,6 +1,5 @@
 {
-  "cSpell.words": [
-    "Assertable",
-    "certifi"
-  ]
+  "cSpell.words": ["Assertable", "certifi"],
+  "php-cs-fixer.executablePath": "/Users/mgalal/Sites/product-tracker/tracker/vendor/bin/php-cs-fixer",
+  "php-cs-fixer.onsave": true
 }

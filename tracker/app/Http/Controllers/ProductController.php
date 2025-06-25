@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TypeResource;
+use App\Models\{Product, Retailer, Type, User};
+use App\Http\Resources\{ProductResource, RetailerResource, StockResource, TypeResource};
+use Illuminate\Support\Facades\{DB, Gate};
 use App\Rules\StockUrlValidation;
-
 use Illuminate\Http\Request;
-use App\Models\{Product, User, Retailer, Type};
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\StockResource;
-use App\Http\Resources\RetailerResource;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-    public function index(Request $request, Type $type = null)
+    public function index(Request $request, ?Type $type = null)
     {
         Gate::authorize('viewAny', Product::class);
 
@@ -42,7 +35,7 @@ class ProductController extends Controller
         return inertia('Products/Index', [
             'products' => $productResources,
             'types' => fn() => TypeResource::collection(Type::all()),
-            'selectedType' => fn() => $type ? TypeResource::make($type) : null, //only load products when Moving through pagination rather than also loading the selected topic data
+            'selectedType' => fn() => $type ? TypeResource::make($type) : null, // only load products when Moving through pagination rather than also loading the selected topic data
         ]);
     }
 
@@ -69,7 +62,7 @@ class ProductController extends Controller
             'type_id' => ['required', 'bail', 'exists:types,id'],
             'stocks' => ['required', 'array'],
             'stocks.*.retailer' => ['bail', 'required', Rule::exists('retailers', 'id')],
-            'stocks.*.url' => ['required', 'url', new StockUrlValidation],
+            'stocks.*.url' => ['required', 'url', new StockUrlValidation()],
             'stocks.*.sku' => ['sometimes', 'required'],
         ]);
 
@@ -132,7 +125,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-
     }
 
     /**

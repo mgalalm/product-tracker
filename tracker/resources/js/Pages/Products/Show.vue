@@ -26,6 +26,8 @@ import {
     CheckBadgeIcon,
 } from "@heroicons/vue/20/solid";
 import { useConfirm } from "@/Utilities/Composables/useConfirm";
+import { Link } from '@inertiajs/vue3';
+import Pill from "@/Components/Pill.vue";
 
 const props = defineProps(["product", "stocks"]);
 
@@ -77,6 +79,11 @@ const deleteStock = async (stockId) => {
 <template>
     <AppLayout :title="product.name">
         <Container>
+            <!-- <Pill
+                class="mb-4"
+                :color="'indigo'"
+                :href="route('products.index', { type: product.type.slug })"
+            >{{ product.type.name }}</Pill> -->
             <heading :title="product.name" :date="formattedDate">
                 <template #meta>
                     <div class="mt-2 flex items-center text-sm text-gray-500">
@@ -84,7 +91,7 @@ const deleteStock = async (stockId) => {
                             class="mr-1.5 size-5 shrink-0 text-gray-400"
                             aria-hidden="true"
                         />
-                        Product
+                        <Link :href="route('products.index', {type: product.type})"> {{ product.type.name }} </Link>
                     </div>
                     <div class="mt-2 flex items-center text-sm text-gray-500">
                         <CheckBadgeIcon
