@@ -27,8 +27,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application's code into the container
 COPY . .
 
+# Copy the SSL certificate to the container
+# COPY mycert.crt /etc/ssl/certs/mycert.crt
+COPY certs/brightdata_proxy_33335.crt /etc/ssl/certs/mycert.crt
+
 # RUN python -m pip install --upgrade pip
 
+EXPOSE 8000
 
 ENV SSL_CERT_FILE="/etc/ssl/certs/mycert.crt"
 

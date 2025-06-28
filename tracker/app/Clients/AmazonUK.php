@@ -10,8 +10,8 @@ class AmazonUK implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-
-        $results = Http::get($this->endpoint($stock))->json();
+        // dd(config('crawlers.auth_token') );
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
         $in_stock = Str::contains(Str::lower($results['availability']), 'in stock') === true;
         // $available = $results['availability'] === 'In stock' ? true : false;
         $price  = Money::parse($results['price']);
@@ -25,7 +25,8 @@ class AmazonUK implements Client
     public function endpoint(Stock $stock): string
     {
         // use base url from Client interface
-        return $this::BASE_URL . "/amazon-uk/{$stock->sku}";
+        // dd(config('crawlers.base_url'));
+        return config('crawlers.base_url') . "/amazon-uk/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array

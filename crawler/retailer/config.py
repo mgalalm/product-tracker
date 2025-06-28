@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings
 from typing import ClassVar, Dict
+from pathlib import Path
+
 
 class RetailerConfig(BaseSettings):
     retailers: ClassVar[Dict[str, Dict[str, str]]] = {
@@ -88,8 +90,9 @@ class RetailerConfig(BaseSettings):
     }
     
     bd_proxy_url: str
+    auth_token: str = "your_default_auth_token"  # Default
     
     class Config:
-        env_file = ".env"  # Optional for environment variables
+        env_file = ".env" if Path(".env").exists() else None
 
 settings = RetailerConfig()

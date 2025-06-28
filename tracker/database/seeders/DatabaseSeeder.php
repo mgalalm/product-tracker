@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
                 [
                     [
                         'retailer_id' => $dunnes->id,
-                        'price' => 12.70,
+                        'price' => 1270,
                         'currency' => 'EUR',
                         'url' => "https://www.dunnesstoresgrocery.com/sm/delivery/rsid/428/product/l'or-classique-instant-coffee-150g-id-100274908",
                         'sku' => '100274908',
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
                     ],
                     [
                         'retailer_id' => $supervalu->id,
-                        'price' => 12.70,
+                        'price' => 1270,
                         'url' => "https://shop.supervalu.ie/sm/delivery/rsid/5551/product/1832340000",
                         'sku' => '1832340000',
                     ],

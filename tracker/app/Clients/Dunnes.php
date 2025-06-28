@@ -11,7 +11,7 @@ class Dunnes implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results =  Http::get($this->endpoint($stock))->json();
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
 
         // if name contains "unavailable" or "missing" return false
         if (Str::contains(Str::lower($results['name']), 'unavailable') || Str::contains(Str::lower($results['name']), 'missing')) {
@@ -30,7 +30,7 @@ class Dunnes implements Client
 
     public function endpoint(Stock $stock): string
     {
-        return $this::BASE_URL . "/dunnes/{$stock->sku}";
+        return config('crawlers.base_url') . "/dunnes/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array

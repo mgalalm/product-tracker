@@ -15,12 +15,12 @@ Route::middleware(['throttle:api'])->group(function () {
 
 
 
-    Route::resource('products', ProductController::class)->only(['create', 'store', 'edit', 'update', 'destroy', 'show'])
-        ->middleware('auth:sanctum');
+    // Route::resource('products', ProductController::class)->only(['create', 'store', 'edit', 'update', 'destroy', 'show'])
+    //     ->middleware('auth:sanctum');
 
-    Route::get('products/{type?}', [ProductController::class, 'index'])
-        ->name('products.index')
-        ->middleware('auth:sanctum');
+    // Route::get('products/{type?}', [ProductController::class, 'index'])
+    //     ->name('products.index')
+    //     ->middleware('auth:sanctum');
 
     Route::post('/user', [AuthController::class, 'login']);
 

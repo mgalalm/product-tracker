@@ -11,8 +11,7 @@ class Smyths implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results =  Http::timeout(60)
-            ->get($this->endpoint($stock), )->json();
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
 
         // if price is N/A set the value to 0 otherwise parse the price
         $price = $results['price'] === 'N/A' ? Money::EUR(0) : Money::parseByDecimal($results['price'], 'EUR');
@@ -26,7 +25,7 @@ class Smyths implements Client
 
     public function endpoint(Stock $stock): string
     {
-        return $this::BASE_URL . "/smyths/{$stock->sku}";
+        return config('crawlers.base_url') . "/smyths/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array

@@ -13,7 +13,7 @@ class Supervalu implements Client
 
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results = Http::get($this->endpoint($stock))->json();
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
 
         // if name contains "unavailable" or "missing" return false
         if (Str::contains(Str::lower($results['name']), 'unavailable') || Str::contains(Str::lower($results['name']), 'missing')) {
@@ -32,7 +32,7 @@ class Supervalu implements Client
 
     public function endpoint(Stock $stock): string
     {
-        return self::BASE_URL . "/supervalu/{$stock->sku}";
+        return config('crawlers.base_url') . "/supervalu/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array

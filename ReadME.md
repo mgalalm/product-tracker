@@ -82,10 +82,10 @@ We have 3 level of testing
 php artisan test
 ```
 
+```bash
+docker build --platform=linux/amd64 . --no-cache -t mgalalm/tracker && docker push mgalalm/tracker
+```
 
-
-
-
-
-
-
+```bash
+docker build --platform=linux/amd64 . --no-cache -t mgalalm/crawler && docker push mgalalm/crawler
+```

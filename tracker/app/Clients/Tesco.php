@@ -11,7 +11,7 @@ class Tesco implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results =  Http::get($this->endpoint($stock))->json();
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
         // dd($results);
 
         // if price is N/A set the value to 0 otherwise parse the price
@@ -26,7 +26,7 @@ class Tesco implements Client
 
     public function endpoint(Stock $stock): string
     {
-        return $this::BASE_URL . "/tesco/{$stock->sku}";
+        return config('crawlers.base_url') . "/tesco/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array
