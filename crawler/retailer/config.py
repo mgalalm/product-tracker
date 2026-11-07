@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import ClassVar, Dict
+from typing import ClassVar, Dict, Optional
 from pathlib import Path
 
 
@@ -91,6 +91,11 @@ class RetailerConfig(BaseSettings):
     
     bd_proxy_url: str
     auth_token: str = "your_default_auth_token"  # Default
+
+    # Path to a custom CA bundle to trust when verifying the Bright Data proxy's TLS certificate
+    bd_ca_cert_path: Optional[str] = None
+    # Set to False to skip TLS verification for the Bright Data proxy connection (not recommended)
+    bd_verify_ssl: bool = True
     
     class Config:
         env_file = ".env" if Path(".env").exists() else None

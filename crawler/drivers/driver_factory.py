@@ -23,8 +23,14 @@ class DriverFactory:
 
     def get_driver(self) -> BaseDriver:
 
+        if self.mode not in self.DRIVER_MAPPING:
+            raise ValueError(
+                f"Unrecognised driver mode '{self.mode}' for site '{self.site}'. "
+                f"Valid options are: {', '.join(self.DRIVER_MAPPING.keys())}"
+            )
+
         driver_info = self.DRIVER_MAPPING[self.mode]
-        
+
         logger.info(f"Creating {self.mode} driver for {self.site} with URL: {self.url}")
         
         try:
