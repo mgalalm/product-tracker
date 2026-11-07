@@ -4,16 +4,19 @@ services:
     build:
       context: ./crawler
       dockerfile: Dockerfile
+    container_name: crawler-container
     ports:
       - "8001:8000"
     volumes:
       - ./crawler:/app
+      - ./certs/brightdata_proxy_33335.crt:/etc/ssl/certs/mycert.crt
     env_file:
       - crawler/.env
     environment:
       - FLASK_APP=app/app.py
       - FLASK_ENV=development
       - FLASK_DEBUG=1
+    restart: always
   
   redis:
     image: redis:latest

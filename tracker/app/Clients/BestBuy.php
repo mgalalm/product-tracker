@@ -21,4 +21,11 @@ class BestBuy implements Client
     {
         return 'http://foo.test';
     }
+
+    public function getProductURLPatterns(): array
+    {
+        return [
+            '/(?:dp|gp\/product)\/([A-Z0-9]+)/'
+        ];
+    }
 }

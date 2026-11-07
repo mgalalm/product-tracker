@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Cknow\Money\Money;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name' , 'type_id'];
     public function inStock()
     {
         return $this->stocks()->where('in_stock', true)->exists();
@@ -36,6 +37,12 @@ class Product extends Model
     public function history()
     {
         return $this->hasMany(History::class);
+    }
+
+    // type
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
     }
 
     public function user()
@@ -71,5 +78,9 @@ class Product extends Model
         return $minMoney->format() . ' - ' . $maxMoney->format();
     }
 
+    public function showRoute(array $params = []): string
+    {
+        return route('products.show', [$this, Str::slug($this->name), ...$params]);
+    }
 
 }

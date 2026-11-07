@@ -5,3 +5,5 @@ six
 beautifulsoup4
 pydantic_settings
 pytest
+httpx
+certifi

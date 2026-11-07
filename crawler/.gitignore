@@ -1,1 +1,8 @@
 page.html
+pages/
+output.html
+*.html
+.env
+__pycache__/
+*.pyc
+.venv/

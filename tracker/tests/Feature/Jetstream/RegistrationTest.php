@@ -23,7 +23,7 @@ test('new users can register', function () {
     $response = $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
-        'password' => 'password',
+        'password' => 'Password1$',
         'password_confirmation' => 'password',
         'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
     ]);
@@ -33,3 +33,28 @@ test('new users can register', function () {
 })->skip(function () {
     return ! Features::enabled(Features::registration());
 }, 'Registration support is not enabled.');
+
+// test user can't register with weak password
+test('new users can\'t register with weak password', function ($password) {
+    $response = $this->post('/register', [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => $password,
+        'password_confirmation' => $password,
+        'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
+    ]);
+    $this->assertGuest();
+    // $response->assertRedirect(route('register'));
+    // $response->assertSessionHasErrors([
+    //     'password' => 'The password must be at least 10 characters long and contain at least one uppercase letter, one number, and one special character.',
+    // ]);
+})->skip(function () {
+    return ! Features::enabled(Features::registration());
+}, 'Registration support is not enabled.')
+->with([
+    'password' => 'password',
+    'password' => 'Password',
+    'password' => 'Password1',
+    'password' => 'password1$',
+]);
+

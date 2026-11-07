@@ -7,6 +7,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ConfirmationModalWrapper from '@/Components/ConfirmationModalWrapper.vue';
 
 
 defineProps({
@@ -38,6 +39,13 @@ const menu = [
         name: 'Products',
         url: route('products.index'),
         route: 'products.index',
+        when: () => usePage().props.auth.user,
+    },
+    {
+        name: 'Create Product',
+        url: route('products.create'),
+        route: 'products.create',
+        when: () => usePage().props.permissions.create_products,
     }
 ];
 </script>
@@ -258,5 +266,7 @@ const menu = [
                 <slot />
             </main>
         </div>
+
+        <ConfirmationModalWrapper />
     </div>
 </template>

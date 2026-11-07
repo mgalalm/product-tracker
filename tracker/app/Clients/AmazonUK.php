@@ -5,18 +5,19 @@ namespace App\Clients;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Http;
 use Cknow\Money\Money;
+use Illuminate\Support\Str;
 class AmazonUK implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-
-        $results = Http::get($this->endpoint($stock))->json();
-
-        $available = $results['availability'] === 'In stock' ? true : false;
+        // dd(config('crawlers.auth_token') );
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
+        $in_stock = Str::contains(Str::lower($results['availability']), 'in stock') === true;
+        // $available = $results['availability'] === 'In stock' ? true : false;
         $price  = Money::parse($results['price']);
 
         return new StockStatus(
-            $available,
+            $in_stock,
             $price
         );
     }
@@ -24,7 +25,8 @@ class AmazonUK implements Client
     public function endpoint(Stock $stock): string
     {
         // use base url from Client interface
-        return $this::BASE_URL . "/amazon-uk/{$stock->sku}";
+        // dd(config('crawlers.base_url'));
+        return config('crawlers.base_url') . "/amazon-uk/{$stock->sku}";
     }
 
     public function getProductURLPatterns(): array

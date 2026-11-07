@@ -1,7 +1,40 @@
 <?php
+use App\Models\{Retailer, Type, User};
+use App\Http\Resources\{RetailerResource, TypeResource};
+use function Pest\Laravel\actingAs;
 
-// it show create product form
 it('can show create product form', function () {
-    $this->get(route('products.create'))
+    $user = User::factory()->create();
+    actingAs($user)->get(route('products.create'))
         ->assertComponent('Products/Create');
 });
+
+it('doesn\'t show create product form for guest', function () {
+    $this->get(route('products.create'))
+        ->assertRedirect(route('login'));
+});
+
+it('returns the correct component', function () {
+    $user = User::factory()->create();
+    actingAs($user)->get(route('products.create'))
+        ->assertComponent('Products/Create');
+});
+
+it('passes retailers to the view', function () {
+    $user = User::factory()->create();
+    Retailer::factory()->count(3)->create();
+    actingAs($user)->get(route('products.create'))
+        ->assertComponent('Products/Create')
+        ->assertHasResource('retailers', RetailerResource::collection(Retailer::all()));
+});
+
+
+
+it('passes types to the view', function () {
+    $user = User::factory()->create();
+    Type::factory()->count(3)->create();
+    actingAs($user)->get(route('products.create'))
+        ->assertComponent('Products/Create')
+        ->assertHasResource('types', TypeResource::collection(Type::all()));
+});
+

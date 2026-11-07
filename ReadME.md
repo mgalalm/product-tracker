@@ -35,6 +35,11 @@ Stocks belong to many products, which means it can be shared between multiple us
 ### Architecture
 ![alt text](docs/architecture.png)
 
+
+### Crawler service
+
+For more information on pseudo-classes, refer to the [Soup Sieve documentation](https://facelessuser.github.io/soupsieve/selectors/pseudo-classes/#:-soup-contains).
+
 ### Queue
 
 All the tracking jobs are queued and processed by the queue worker with a delay of 4 mins.
@@ -77,10 +82,10 @@ We have 3 level of testing
 php artisan test
 ```
 
+```bash
+docker build --platform=linux/amd64 . --no-cache -t mgalalm/tracker && docker push mgalalm/tracker
+```
 
-
-
-
-
-
-
+```bash
+docker build --platform=linux/amd64 . --no-cache -t mgalalm/crawler && docker push mgalalm/crawler
+```

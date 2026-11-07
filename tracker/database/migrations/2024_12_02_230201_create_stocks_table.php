@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Retailer::class)->constrained()->cascadeOnDelete();
-            $table->unsignedInteger('price');
+            $table->unsignedInteger('price')->default(0);
             $table->string('currency')->default('EUR');
             $table->string('sku')->nullable();
             $table->boolean('in_stock')->nullable();

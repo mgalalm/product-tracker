@@ -1,22 +1,12 @@
 <?php
 
 use App\Http\Controllers\StockController;
-use App\Http\Resources\{
-    ProductResource,
-    RetailerResource,
-    StockResource,
-    UserResource
-};
-use App\Models\{
-    Product,
-    Retailer,
-    Stock,
-    User
-};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProductController;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
 
 
 Route::get('/', function () {
@@ -36,18 +26,19 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-    Route::delete('/products/{product}/stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
+
+    Route::resource('products', ProductController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('products.stocks', StockController::class);
+
+    // index only
+    Route::get('products/{type?}', [ProductController::class, 'index'])->name('products.index');
+    // show with a slug
+    Route::get('products/{product}/{slug}', [ProductController::class, 'show'])->name('products.show');
 });
 
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/products/{product}/stocks', [ProductController::class, 'storeStock'])->name('products.stocks.store');
 
-
-// test route return user
 Route::get('/test', function () {
-    return StockResource::collection(Stock::with('product', 'retailer')->paginate(1));
+    phpinfo();
+    return 'test';
 });
+

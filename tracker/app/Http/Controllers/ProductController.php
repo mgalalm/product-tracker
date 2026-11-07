@@ -2,37 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\ProductUrlValidation;
-use Gate;
+use App\Models\{Product, Retailer, Type, User};
+use App\Http\Resources\{ProductResource, RetailerResource, StockResource, TypeResource};
+use Illuminate\Support\Facades\{DB, Gate};
+use App\Rules\StockUrlValidation;
 use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\StockResource;
-use App\Models\Retailer;
-use App\Http\Resources\RetailerResource;
-use Illuminate\Support\Facades\DB;
-
-
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, ?Type $type = null)
     {
+        Gate::authorize('viewAny', Product::class);
+
+        $products = $request->user()->products()
+            ->select('id', 'name', 'created_at', 'type_id')
+            ->with('type:id,name,slug')
+            ->when($type, fn($query) => $query->where('type_id', $type->id))
+            ->latest('id')
+            ->paginate();
+
+        $productResources = ProductResource::collection($products);
+
+        if ($request->wantsJson()) {
+            return $productResources;
+        }
+
         return inertia('Products/Index', [
-            'products' => ProductResource::collection(Product::latest()->latest('id')->paginate()),
+            'products' => $productResources,
+            'types' => fn() => TypeResource::collection(Type::all()),
+            'selectedType' => fn() => $type ? TypeResource::make($type) : null, // only load products when Moving through pagination rather than also loading the selected topic data
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(User $user)
     {
+        Gate::authorize('create', Product::class);
+
         return inertia('Products/Create', [
             'retailers' => fn() => RetailerResource::collection(Retailer::all()),
+            'types' => fn() => TypeResource::collection(Type::all()),
         ]);
     }
 
@@ -41,47 +57,58 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // validate the request
         $data = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
-            'retailer' => ['required', 'exists:retailers,id'],
-            'stockUrl' => ['required', 'url', new ProductUrlValidation],
+            'name' => ['required', 'string', 'max:255'],
+            'type_id' => ['required', 'bail', 'exists:types,id'],
+            'stocks' => ['required', 'array'],
+            'stocks.*.retailer' => ['bail', 'required', Rule::exists('retailers', 'id')],
+            'stocks.*.url' => ['required', 'url', new StockUrlValidation()],
+            'stocks.*.sku' => ['sometimes', 'required'],
         ]);
 
-        // get sku from session
-        $sku = session()->get('sku');
-
-        // create product
         $product = $request->user()->products()->create([
             'name' => $data['name'],
+            'type_id' => $data['type_id'],
         ]);
 
-        // create stock
-        $product->stocks()->firstOrCreate([
-            'sku' => $sku,
-            'retailer_id' => $data['retailer'],
-        ] ,[
-            'price' => 0,
-            'url' => $data['stockUrl'],
-            // 'in_stock' => false,
-            'retailer_id' => $data['retailer'],
-            'sku' => $sku,
-        ]);
+        collect($data['stocks'])->each(function ($stock) use ($product) {
+            $product->stocks()->firstOrCreate(
+                [
+                    'sku' => $stock['sku'],
+                    'retailer_id' => $stock['retailer'],
+                ],
+                [
+                    'url' => $stock['url'],
+                ]
+            );
+        });
 
-        return to_route('products.index');
+        return redirect($product->showRoute())
+            ->banner("Product {$product->name} has been created successfully.");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
-        // load the stocks relationship
-        $product->load('stocks');
+        Gate::authorize('view', $product);
+
+        if (!Str::contains($product->showRoute(), $request->path())) {
+            return redirect($product->showRoute($request->query()), 301);
+        }
+
+        $product->load('stocks', 'type');
+
+        if ($request->wantsJson()) {
+            return ProductResource::make($product);
+        }
 
         return inertia('Products/Show', [
             'product' => fn() => ProductResource::make($product),
+            'type' => fn() => TypeResource::make($product->type),
             'stocks' => fn() => StockResource::collection($product->stocks()->with('retailer')->latest('updated_at')->paginate()),
+
         ]);
     }
 
@@ -96,9 +123,8 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
     }
 
     /**
@@ -123,6 +149,7 @@ class ProductController extends Controller
             });
         });
 
-        return to_route('products.index');
+        return to_route('products.index')
+            ->banner("Product {$product->name} has been deleted successfully.");
     }
 }

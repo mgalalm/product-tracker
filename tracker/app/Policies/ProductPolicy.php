@@ -13,7 +13,8 @@ class ProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        // Basic check - only authenticated users can view their resources
+        return true;
     }
 
     /**
@@ -21,7 +22,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product): bool
     {
-        return false;
+        return $user->id === $product->user_id;
     }
 
     /**
@@ -29,7 +30,7 @@ class ProductPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**

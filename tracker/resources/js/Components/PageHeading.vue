@@ -1,28 +1,10 @@
 <template>
-  <div class="lg:flex lg:items-center lg:justify-between">
+  <div class="lg:flex lg:items-center lg:justify-between mb-2">
     <div class="min-w-0 flex-1">
       <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{ title}}</h2>
       <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
           <slot name="meta" class="mt-1 text-sm/6 text-gray-500"></slot>
       </div>
-      <!-- <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <BriefcaseIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Full-time
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <MapPinIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Remote
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <CurrencyDollarIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          $120k &ndash; $140k
-        </div>
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <CalendarIcon class="mr-1.5 size-5 shrink-0 text-gray-400" aria-hidden="true" />
-          Closing on January 9, 2020
-        </div>
-      </div> -->
     </div>
     <div class="mt-5 flex lg:ml-4 lg:mt-0">
         <slot></slot>
@@ -50,15 +32,7 @@
 
 <script setup>
 import {
-  BriefcaseIcon,
-  CalendarIcon,
-  CheckIcon,
   ChevronDownIcon,
-  CurrencyDollarIcon,
-  LinkIcon,
-  MapPinIcon,
-  PencilIcon,
-  TrashIcon
 } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 defineProps({

@@ -1,10 +1,21 @@
 from pydantic_settings import BaseSettings
-from typing import ClassVar, Dict
+from typing import ClassVar, Dict, Optional
+from pathlib import Path
+
 
 class RetailerConfig(BaseSettings):
     retailers: ClassVar[Dict[str, Dict[str, str]]] = {
         "amazon-uk": {
             "base_url": "https://www.amazon.co.uk/dp/",
+            "selectors": {
+                "name": "span#productTitle",
+                "price": "span.a-offscreen",
+                "availability": "div#availability span"
+            },
+            "driver_mode": "remote"
+        },
+        "amazon-ie": {
+            "base_url": "https://www.amazon.ie/dp/",
             "selectors": {
                 "name": "span#productTitle",
                 "price": "span.a-offscreen",
@@ -35,7 +46,7 @@ class RetailerConfig(BaseSettings):
             "base_url": "https://www.tesco.ie/groceries/en-IE/products/",
             "selectors": {
                 "name": "h1",
-                "price": "p[class*='styled__PriceText']",
+                "price": "p[class*='priceText']",
                 "availability": 'span:contains("out of stock")'
             },
             "driver_mode": "remote"
@@ -48,12 +59,45 @@ class RetailerConfig(BaseSettings):
                 "availability": "span.availability"
             },
             "driver_mode": "remote"
+        },
+        "smyths": {
+            "base_url": "https://www.smythstoys.com/ie/en-ie/p/", #p/171375
+            "selectors": {
+                "name": "h1",
+                "price": 'meta[property="og:price:amount"]',
+                "availability": 'span:-soup-contains("Out of stock", "Out of Stock", "Out Of Stock")'
+            },
+            "driver_mode": "remote"
+        },
+        "airback" : {
+            "base_url": "https://airback.store/products/airback?variant=",
+            "selectors": {
+                "name": "title",
+                "price": 'meta[property="product:price:amount"]',
+                "availability": 'meta[property="product:availability"]'
+            },
+            "driver_mode": "local"
+        },  
+        "supervalu": {
+            "base_url": "https://shop.supervalu.ie/product/",
+            "selectors": {
+                "name": "title",
+                "price": 'meta[itemprop="price"]',
+                "availability": 'span:-soup-contains("Out of stock", "Out of Stock", "Out Of Stock")'
+            },
+            "driver_mode": "local"
         }
     }
     
     bd_proxy_url: str
+    auth_token: str = "your_default_auth_token"  # Default
+
+    # Path to a custom CA bundle to trust when verifying the Bright Data proxy's TLS certificate
+    bd_ca_cert_path: Optional[str] = None
+    # Set to False to skip TLS verification for the Bright Data proxy connection (not recommended)
+    bd_verify_ssl: bool = True
     
     class Config:
-        env_file = ".env"  # Optional for environment variables
+        env_file = ".env" if Path(".env").exists() else None
 
 settings = RetailerConfig()

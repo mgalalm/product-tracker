@@ -3,18 +3,26 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{Product, Retailer, Stock, User};
+use App\Models\{Product, Retailer, Stock, User, Type};
+use Database\Seeders\TypeSeeder;
 
 class RetailerWithProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
+
+    public static User $user;
+
     public function run(): void
     {
-        $user = User::factory()->create(['email' => 'mgalal@example.com']);
+        $this->call(TypeSeeder::class);
 
-        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => $user->id]);
+        $types = Type::all();
+
+        self::$user = User::factory()->create(['email' => 'mgalal@example.com']);
+
+        $my_book = Product::create(['name' => "Zayn and Grandad\s van", 'user_id' => self::$user->id, 'type_id' => $types->where('slug', 'general')->first()->id]);
 
         $amazon_uk = Retailer::create(['name' => 'Amazon UK', 'domain' => 'amazon.co.uk']);
 

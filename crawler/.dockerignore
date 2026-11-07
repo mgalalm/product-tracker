@@ -1,0 +1,40 @@
+.env
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Environment variables and secrets
+.env
+*.env
+
+# Pytest and test results
+*.log
+*.coverage
+coverage/
+htmlcov/
+.tox/
+
+# IDEs and editor config
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Migrations (optional, if auto-generated)
+migrations/
+alembic/versions/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/

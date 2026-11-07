@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Stock;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Auth\Access\Response;
 
 class StockPolicy
@@ -35,19 +36,18 @@ class StockPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Stock $stock): bool
+    public function update(User $user, Stock $stock, Product $product): bool
     {
-        return false;
+        return $user->id === $product->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Stock $stock): bool
+    public function delete(User $user, Stock $stock, Product $product): bool
     {
-        // detach the stock from the product as long as the user is the owner of the product
-        $product = $stock->products->first();
         return $user->id === $product->user_id;
+
     }
 
     /**

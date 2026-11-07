@@ -1,0 +1,15 @@
+---
+name: "Feature Request / Bug Report"
+description: "Describe the issue or feature request in detail."
+title: "[Feature] / [Bug] <Brief Summary>"
+labels: ["bug", "enhancement"]
+assignees: []
+---
+### Description
+<!-- Provide a clear and concise description of the issue or feature request. -->
+
+### Acceptance Criteria
+<!-- List specific conditions that must be met for the issue to be considered resolved. -->
+- [ ] Criteria 1
+- [ ] Criteria 2
+- [ ] Criteria 3

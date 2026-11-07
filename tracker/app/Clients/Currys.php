@@ -11,7 +11,7 @@ class Currys implements Client
 {
     public function checkAvailability(Stock $stock): StockStatus
     {
-        $results =  Http::get($this->endpoint($stock))->json();
+        $results = Http::withToken(config('crawlers.auth_token'))->get($this->endpoint($stock))->json();
 
         $price = Money::parse($results['price']);
         $in_stock = Str::lower($results['availability']) !== Str::lower('out of stock');
@@ -24,7 +24,7 @@ class Currys implements Client
 
     public function endpoint(Stock $stock): string
     {
-        return $this::BASE_URL . "/currys/{$stock->sku}.html";
+        return config('crawlers.base_url') . "/currys/{$stock->sku}.html";
     }
 
     public function getProductURLPatterns(): array
